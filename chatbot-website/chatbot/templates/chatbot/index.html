@@ -1,11 +1,92 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot Appointment Assistant</title>
-    <link rel="stylesheet" href="{% static 'chatbot/css/styles.css' %}">
-    <script src="{% static 'chatbot/js/scripts.js' %}" defer></script>
+    <style>
+        /* General styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Header styling */
+        header {
+            background: #005f73;
+            color: #fff;
+            text-align: center;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        /* Main content */
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+            padding: 2rem;
+        }
+
+        #introduction {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        #introduction p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Button styling */
+        button {
+            background: #0077b6;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #00b4d8;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            background: #333;
+            color: #fff;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const startChatButton = document.getElementById("start-chat");
+
+            startChatButton.addEventListener("click", function () {
+                alert("Chat feature coming soon!");
+            });
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -18,7 +99,7 @@
         </section>
     </main>
     <footer>
-        <p>&copy; 2023 Chatbot Appointment Assistant. All rights reserved.</p>
+        <p>&copy; 2025 Chatbot Appointment Assistant. All rights reserved.</p>
     </footer>
 </body>
 </html>

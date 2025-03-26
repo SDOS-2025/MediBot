@@ -3,16 +3,30 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'chatbot',  # Change this to your actual database name
+#         'USER': 'root',  # MySQL username (usually 'root' for local development)this
+#         'PASSWORD': '45221313',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'chatbot',  # Change this to your actual database name
-        'USER': 'root',  # MySQL username (usually 'root' for local development)this
-        'PASSWORD': 'Aditya@1998',
+        'NAME': 'medico_db',
+        'USER': 'medico_user',
+        'PASSWORD': 'strongpassword',
         'HOST': 'localhost',
         'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -30,13 +44,13 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Move this BEFORE your custom middleware
+    'chatbot.middleware.AuthenticationMiddleware',  # Your custom middleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'chatbot_website.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -65,11 +79,31 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static",
+# ]
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    os.path.join(BASE_DIR, 'chatbot/static'),
 ]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# deeeeeecod
+DEBUG = True
+# huggingface-cli login
+# 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
+import secrets
+keyy=secrets.token_urlsafe()
+print(keyy)
+SECRET_KEY = keyy
+
+
+# AUTH_USER_MODEL = 'chatbot.SystemUser'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+AUTH_USER_MODEL = 'chatbot.CustomUser'

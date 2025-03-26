@@ -1,0 +1,92 @@
+/* Remove social login styles */
+.login-card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  padding: 2.5rem;
+  margin: 2rem auto;
+  max-width: 450px;
+}
+
+/* Keep remaining styles from previous version */
+body {
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-transparent {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  color: #333 !important;
+  font-size: 1.5rem;
+}
+
+.navbar-brand i {
+  color: #9b59b6;
+}
+
+.input-group-text {
+  background: #f8f9fa;
+  border-color: #e9ecef;
+}
+
+.btn-primary {
+  background-color: #9b59b6;
+  border: none;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  transition: transform 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #8e44ad;
+  transform: translateY(-1px);
+}
+
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+  background-color: #9b59b6;
+  border-color: #8e44ad;
+}
+
+.text-primary {
+  color: #9b59b6 !important;
+}
+
+a:hover {
+  color: #8e44ad !important;
+  text-decoration: none;
+}
+.container{
+  display:flexbox;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Form Validation Styles */
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+.alert-container {
+    margin-bottom: 1.5rem;
+}
+
+.alert {
+    border-radius: 4px;
+    padding: 0.75rem 1.25rem;
+}
