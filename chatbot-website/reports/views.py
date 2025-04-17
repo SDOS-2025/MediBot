@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from .models import Report
 from meditron.utils import generate_response  # Fix import statement
-from chatbot.models import CustomUser  # add import
+from chatbot.models import CustomUser, Treatment  # add imports
 import random  # add random import
 
 def report_view(request):
@@ -19,12 +19,29 @@ def generate_report(request):  # Fix function name
         # assign random doctor by matching specialization if provided
         specialty = request.POST.get('specialization')
         if specialty:
-            doctors = CustomUser.objects.filter(is_staff=True, specialization=specialty)
+            doctors = CustomUser.objects.filter(doctor_profile__specialization=specialty)
         else:
-            doctors = CustomUser.objects.filter(is_staff=True)
+            doctors = CustomUser.objects.filter(doctor_profile__isnull=False)
         if doctors.exists():
             assigned = random.choice(list(doctors))
+            # reuse existing open treatment or create new one, update reqd if changed
+            treatment = Treatment.objects.filter(
+                patient=request.user,
+                doctor=assigned,
+                is_closed=False
+            ).first()
+            if treatment:
+                if specialty and treatment.reqd != specialty:
+                    treatment.reqd = specialty
+                    treatment.save()
+            else:
+                treatment = Treatment.objects.create(
+                    patient=request.user,
+                    doctor=assigned,
+                    reqd=specialty
+                )
             report.assigned_doctor = assigned
+            report.treatment = treatment
             report.save()
         return JsonResponse({'status': 'success', 'report_id': report.id})
 

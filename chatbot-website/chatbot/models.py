@@ -72,3 +72,23 @@ class PatientProfile(models.Model):
     def __str__(self):
         name = self.user.full_name or self.user.uid
         return f"Patient {name}"
+
+class Treatment(models.Model):
+    patient = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='treatments',
+        limit_choices_to={'is_staff': False}
+    )
+    doctor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='treatments_assigned',
+        limit_choices_to={'doctor_profile__isnull': False}
+    )
+    is_closed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    reqd = models.CharField(max_length=255, null=True, blank=True)  # required specialty for doctor matching
+
+    def __str__(self):
+        return f"Treatment of {self.patient.uid} by Dr. {self.doctor.uid} (Closed: {self.is_closed})"

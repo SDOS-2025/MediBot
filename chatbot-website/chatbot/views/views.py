@@ -1,13 +1,17 @@
 # chatbot/views/views.py
 import os
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
+import random
+from io import BytesIO
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse, FileResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login, logout
-from chatbot.models import CustomUser, DoctorProfile  # add DoctorProfile
-from django.db import IntegrityError  # Import IntegrityError
-from reports.models import Report  # add import at top
+from chatbot.models import CustomUser, DoctorProfile, Treatment
+from django.db import IntegrityError
+from reports.models import Report
+from chatbot.utils import generate_sample_text, text_to_pdf
+from django.conf import settings
 
 def index(request):
     # Add a link to admin if user is not logged in or not staff/superuser
@@ -104,16 +108,30 @@ def register_doctor(request):
 
 @login_required
 def doctor_dashboard(request):
-    # only users with a DoctorProfile should access
+    # Ensure only doctors can access this view
     if not hasattr(request.user, 'doctor_profile'):
-        messages.error(request, 'You do not have access to the doctor dashboard.')
+        messages.error(request, 'Access denied')
         return redirect('login')
-    # Fetch reports assigned to this doctor
-    patients_reports = Report.objects.filter(assigned_doctor=request.user)
+
+    # Fetch open and closed treatments assigned to the logged-in doctor
+    open_treatments = Treatment.objects.filter(doctor=request.user, is_closed=False)
+    closed_treatments = Treatment.objects.filter(doctor=request.user, is_closed=True)
+
     context = {
-        'patients_reports': patients_reports,
+        'open_treatments': open_treatments,
+        'closed_treatments': closed_treatments,
     }
     return render(request, 'chatbot/doctor_dashboard.html', context)
+
+@login_required
+def close_treatment(request, treatment_id):
+    # Fetch the treatment and ensure it belongs to the logged-in doctor
+    treatment = get_object_or_404(Treatment, id=treatment_id, doctor=request.user)
+    treatment.is_closed = True
+    treatment.save()
+
+    messages.success(request, f'Treatment for patient {treatment.patient.uid} has been closed.')
+    return redirect('doctor_dashboard')
 
 def chat(request):
     if request.method == 'POST':
@@ -127,35 +145,63 @@ def chat(request):
         
     return render(request, 'chatbot/chat.html')
 
-from chatbot.utils import generate_sample_text, text_to_pdf  # Add this import
-from django.conf import settings
-
-# chatbot/views/views.py
-from django.http import FileResponse
-# chatbot/views/views.py
 def generate_pdf(request):
-    # Generate PDF and redirect to preview
-    sample_text = generate_sample_text()
-    pdf_filename = text_to_pdf(sample_text)
-    return redirect('pdf_preview')
+    # Only patients generate PDFs
+    if not request.user.is_authenticated or hasattr(request.user, 'doctor_profile') or request.user.is_superuser:
+        messages.error(request, 'Only patients can generate reports.')
+        return redirect('login')
+
+    # Pick a random doctor with matching specialty requirement
+    doctors = CustomUser.objects.filter(doctor_profile__isnull=False)
+    if not doctors.exists():
+        messages.error(request, 'No doctors available to assign.')
+        return redirect('index')
+    assigned = random.choice(list(doctors))
+    specialty = assigned.doctor_profile.specialization
+    # Look for existing open treatment for this patient and specialty
+    treatment = Treatment.objects.filter(
+        patient=request.user,
+        doctor=assigned,
+        is_closed=False,
+        reqd=specialty
+    ).first()
+    if not treatment:
+        treatment = Treatment.objects.create(
+            patient=request.user,
+            doctor=assigned,
+            reqd=specialty
+        )
+
+    # Generate PDF file on disk
+    dummy_text = f"Patient Report for {request.user.uid}"  # placeholder text
+    filename = text_to_pdf(dummy_text)
+    filepath = os.path.join(settings.MEDIA_ROOT, filename)
+
+    # Read PDF as blob
+    with open(filepath, 'rb') as f:
+        pdf_data = f.read()
+
+    # Save report in database with PDF blob
+    report = Report.objects.create(
+        title=f"Report_{treatment.id}",
+        content=dummy_text,
+        user=request.user,
+        assigned_doctor=assigned,
+        treatment=treatment,
+        pdf_blob=pdf_data
+    )
+
+    # Stream PDF back to the browser
+    return FileResponse(BytesIO(pdf_data), content_type='application/pdf', as_attachment=True, filename=filename)
 
 def pdf_preview(request):
-    try:
-        pdf_files = sorted(
-            [f for f in os.listdir(settings.MEDIA_ROOT) if f.endswith('.pdf')],
-            key=lambda x: os.path.getctime(os.path.join(settings.MEDIA_ROOT, x)),
-            reverse=True
-        )
-        
-        if pdf_files:
-            latest_pdf = pdf_files[0]
-            pdf_url = f"{settings.MEDIA_URL}{latest_pdf}"
-            return render(request, 'chatbot/pdf_preview.html', {
-                'pdf_url': pdf_url,
-                'pdf_filename': latest_pdf
-            })
-            
-        return render(request, 'chatbot/pdf_preview.html', {'error': 'No reports found'})
-    
-    except FileNotFoundError:
-        return render(request, 'chatbot/pdf_preview.html', {'error': 'Report directory missing'})
+    # Preview a PDF stored in MEDIA folder via ?file=filename.pdf
+    file_name = request.GET.get('file')
+    if not file_name:
+        messages.error(request, 'No file specified for preview.')
+        return redirect('index')
+    file_path = os.path.join(settings.MEDIA_ROOT, file_name)
+    if not os.path.exists(file_path):
+        messages.error(request, 'Requested file does not exist.')
+        return redirect('index')
+    return FileResponse(open(file_path, 'rb'), content_type='application/pdf')

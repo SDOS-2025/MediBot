@@ -340,6 +340,58 @@
             </div>
           </div>
         </div>
+
+        <!-- Treatments and Reports -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Patient Treatments & Reports</h5>
+              </div>
+              <div class="card-body">
+                {% if open_treatments or closed_treatments %}
+                  <h6>Ongoing Treatments</h6>
+                  {% for treatment in open_treatments %}
+                    <div class="mb-3">
+                      <h6>Patient: {{ treatment.patient.full_name|default:treatment.patient.uid }}</h6>
+                      <ul class="list-group mb-2">
+                        {% for report in treatment.treatment_reports.all %}
+                          <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ report.title }} ({{ report.created_at|date:"Y-m-d H:i" }})</span>
+                            <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-primary">View</a>
+                          </li>
+                        {% empty %}
+                          <li class="list-group-item text-muted">No reports yet.</li>
+                        {% endfor %}
+                      </ul>
+                      <a href="{% url 'close_treatment' treatment.id %}" class="btn btn-sm btn-warning">Close Treatment</a>
+                    </div>
+                  {% endfor %}
+
+                  <h6>Closed Treatments</h6>
+                  {% for treatment in closed_treatments %}
+                    <div class="mb-3">
+                      <h6>Patient: {{ treatment.patient.full_name|default:treatment.patient.uid }}</h6>
+                      <ul class="list-group mb-2">
+                        {% for report in treatment.treatment_reports.all %}
+                          <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ report.title }} ({{ report.created_at|date:"Y-m-d H:i" }})</span>
+                            <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-primary">View</a>
+                          </li>
+                        {% empty %}
+                          <li class="list-group-item text-muted">No reports yet.</li>
+                        {% endfor %}
+                      </ul>
+                      <span class="badge badge-secondary">Closed</span>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <p class="text-muted">No treatments assigned.</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
         
       </div>
     </div>

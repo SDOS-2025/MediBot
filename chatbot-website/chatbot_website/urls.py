@@ -1,10 +1,3 @@
-# from django.contrib import admin
-# from django.urls import path, include
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('', include('chatbot.urls')),  # Include chatbot app's URLs
-# ]
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -15,6 +8,7 @@ from chatbot.admin import admin_site
 urlpatterns = [
     path('admin/', admin_site.urls),  # Use our custom admin site
     path('', include('chatbot.urls')),
+    path('reports/', include('reports.urls')),  # Add reports URL patterns
 ]
 
 if settings.DEBUG:

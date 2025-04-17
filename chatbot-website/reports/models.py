@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from chatbot.models import Treatment  # add import at top
 
 class UserInteraction(models.Model):
     user_id = models.CharField(max_length=255)
@@ -38,6 +39,14 @@ class Report(models.Model):
         related_name='assigned_reports',
         limit_choices_to={'is_staff': True}
     )
+    treatment = models.ForeignKey(
+        Treatment,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='treatment_reports'
+    )
+    pdf_blob = models.BinaryField(null=True, blank=True)  # store PDF binary data
 
     def __str__(self):
         return self.title
