@@ -13,6 +13,7 @@ from reports.models import Report
 from chatbot.utils import generate_sample_text, text_to_pdf
 from django.conf import settings
 
+
 def index(request):
     # Add a link to admin if user is not logged in or not staff/superuser
     show_admin_link = not request.user.is_authenticated or \
@@ -228,3 +229,191 @@ def report_gen(request):
     
     # GET request - render chat interface
     return render(request, 'chatbot/report_gen.html')
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from google import genai
+from google.genai import types
+
+client = genai.Client(api_key="AIzaSyB0R26JpwnrxR1iHP7SRdlXImYhG2NAYLQ")
+
+system_instruction = (
+    "You are a medical assistant chatbot. Follow this EXACT process:"
+    "\n1. Ask the patient: 'What are your main symptoms?'"
+    "\n2. Ask the patient: 'How long have you been experiencing these symptoms?'"
+    "\n3. Ask the patient: 'Do you have any previous medical conditions?'"
+    "\n4. Based on all previous answers, ask ONE relevant follow-up question."
+    "\n5. Based on all previous answers, ask ONE final relevant follow-up question."
+    "\nAfter collecting all answers, generate a medical report with sections for History of Present Illness, "
+    "Medications, and Allergies. Then include the delimiter '###1234###' on a new line, followed by your preliminary diagnosis."
+    "\nDo NOT ask multiple questions at once. Ask EXACTLY ONE question at a time and wait for the answer."
+)
+fixed_questions = [
+    "What are your main symptoms?",
+    "How long have you been experiencing these symptoms?",
+    "Do you have any previous medical conditions?"
+]
+# @csrf_exempt
+# def medical_chat(request):
+#     if request.method == 'DELETE':
+#         request.session.pop('chat_session', None)
+#         return JsonResponse({'status': 'reset'})
+    
+#     # Initialize session data
+#     chat_session = request.session.get('chat_session')
+
+#     if request.method == 'POST':
+#         user_input = request.POST.get('user_input', '')
+        
+#         try:
+#             # Initialize or retrieve chat session
+#             if not chat_session:
+#                 # Create new chat session
+#                 chat = client.chats.create(
+#                     model="gemini-1.5-flash",
+#                     config=types.GenerateContentConfig(
+#                         system_instruction=system_instruction
+#                     )
+#                 )
+#                 # Store initial session data
+#                 chat_session = {
+#                     'history': [],
+#                     'question_count': 0
+#                 }
+#             else:
+#                 # Rebuild chat from history
+#                 chat = client.chats.create(
+#                     model="gemini-1.5-flash",
+#                     config=types.GenerateContentConfig(
+#                         system_instruction=system_instruction
+#                     ),
+#                     history=chat_session['history']
+#                 )
+
+#             # Send user input
+#             response = chat.send_message(user_input)
+#             bot_response = response.text.strip()
+            
+#             # Update session data
+#             chat_session['history'].extend([
+#                 {'role': 'user', 'parts': [user_input]},
+#                 {'role': 'model', 'parts': [bot_response]}
+#             ])
+#             chat_session['question_count'] += 1
+#             request.session['chat_session'] = chat_session
+            
+#             # Determine next step based on question count
+#             if chat_session['question_count'] < 3:
+#                 next_q = fixed_questions[chat_session['question_count']]
+#                 return JsonResponse({'status': 'question', 'question': next_q})
+#             elif chat_session['question_count'] == 3:
+#                 response = chat.send_message("Based on the previous answers, ask ONE relevant follow-up question.")
+#                 return JsonResponse({'status': 'question', 'question': response.text.strip()})
+#             elif chat_session['question_count'] == 4:
+#                 response = chat.send_message("Based on all previous answers, ask ONE final relevant follow-up question.")
+#                 return JsonResponse({'status': 'question', 'question': response.text.strip()})
+#             else:
+#                 # Generate final report
+#                 response = chat.send_message("Generate the medical report with delimiter as instructed.")
+#                 report, _, diagnosis = response.text.partition('###1234###')
+#                 request.session.pop('chat_session', None)
+#                 return JsonResponse({
+#                     'status': 'complete',
+#                     'report': report.strip(),
+#                     'diagnosis': diagnosis.strip()
+#                 })
+                
+#         except Exception as e:
+#             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+#     else:  # GET request
+#         if not chat_session:
+#             # Start new conversation with first question
+#             return JsonResponse({'status': 'question', 'question': fixed_questions[0]})
+        
+#         # Return last bot message
+#         last_message = next((msg for msg in reversed(chat_session['history']) 
+#                           if msg['role'] == 'model'), None)
+#         return JsonResponse({'status': 'question', 'question': last_message['parts'][0]})
+@csrf_exempt
+def medical_chat(request):
+    if request.method == 'DELETE':
+        request.session.pop('chat_session', None)
+        return JsonResponse({'status': 'reset'})
+    
+    # Initialize session data
+    chat_session = request.session.get('chat_session')
+
+    if request.method == 'POST':
+        user_input = request.POST.get('user_input', '')
+        
+        try:
+            # Initialize or retrieve chat session
+            if not chat_session:
+                # Create new chat session
+                chat = client.chats.create(
+                    model="gemini-1.5-flash",
+                    config=types.GenerateContentConfig(
+                        system_instruction=system_instruction
+                    )
+                )
+                # Store initial session data
+                chat_session = {
+                    'history': [],
+                    'question_count': 0
+                }
+            else:
+                # Rebuild chat from history with proper formatting
+                chat = client.chats.create(
+                    model="gemini-1.5-flash",
+                    config=types.GenerateContentConfig(
+                        system_instruction=system_instruction
+                    ),
+                    history=chat_session['history']
+                )
+
+            # Send user input as plain text
+            response = chat.send_message(user_input)
+            bot_response = response.text.strip()
+            
+            # Update session data with text strings only
+            chat_session['history'].extend([
+                {'role': 'user', 'parts': [user_input]},
+                {'role': 'model', 'parts': [bot_response]}
+            ])
+            chat_session['question_count'] += 1
+            request.session['chat_session'] = chat_session
+            
+            # Determine next step based on question count
+            if chat_session['question_count'] < 3:
+                next_q = fixed_questions[chat_session['question_count']]
+                return JsonResponse({'status': 'question', 'question': next_q})
+            elif chat_session['question_count'] == 3:
+                response = chat.send_message("Based on the previous answers, ask ONE relevant follow-up question.")
+                return JsonResponse({'status': 'question', 'question': response.text.strip()})
+            elif chat_session['question_count'] == 4:
+                response = chat.send_message("Based on all previous answers, ask ONE final relevant follow-up question.")
+                return JsonResponse({'status': 'question', 'question': response.text.strip()})
+            else:
+                # Generate final report
+                response = chat.send_message("Generate the medical report with delimiter as instructed.")
+                report, _, diagnosis = response.text.partition('###1234###')
+                request.session.pop('chat_session', None)
+                return JsonResponse({
+                    'status': 'complete',
+                    'report': report.strip(),
+                    'diagnosis': diagnosis.strip()
+                })
+                
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+    else:  # GET request
+        if not chat_session:
+            # Start new conversation with first question
+            return JsonResponse({'status': 'question', 'question': fixed_questions[0]})
+        
+        # Return last bot message
+        last_message = next((msg for msg in reversed(chat_session['history']) 
+                          if msg['role'] == 'model'), None)
+        return JsonResponse({'status': 'question', 'question': last_message['parts'][0]})

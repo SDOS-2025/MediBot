@@ -2,7 +2,7 @@ from django.urls import path
 from .views.views import index, user_login, register_user, chat, doctor_dashboard, register_doctor, user_logout, generate_pdf, pdf_preview, close_treatment
 from django.conf.urls.static import static
 from django.conf import settings
-from .views.views import report_gen
+from .views.views import report_gen, medical_chat
 
 urlpatterns = [
     path('', index, name='index'),
@@ -16,4 +16,5 @@ urlpatterns = [
     path('generate-pdf/', generate_pdf, name='generate_pdf'),
     path('pdf-preview/', pdf_preview, name='pdf_preview'),
     path('reportgen/', report_gen, name='reportgen'),
+    path('medical-chat/', medical_chat, name='medical_chat'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

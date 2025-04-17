@@ -212,67 +212,73 @@ body {
   <!-- CSRF token for Django -->
   {% csrf_token %}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-  // restore or init history
-  let chatHistory = JSON.parse(localStorage.getItem('medicoChatHistory'))||[];
+<script>
+$(function() {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const chatMessages = $('#chat-messages');
+    const userInput = $('#user-input');
+    const sendButton = $('#send-button');
+    const typingIndicator = $('#typing-indicator');
 
-  $(function(){
-    const chatMessages   = $('#chat-messages');
-    const userInput      = $('#user-input');
-    const sendButton     = $('#send-button');
-    const typingIndicator= $('#typing-indicator');
+    // Message handler
+    async function handleMessage() {
+        const message = userInput.val().trim();
+        if (!message) return;
 
-    // render what we already have
-    chatHistory.forEach(h=>addMessage(h.content,h.sender));
+        addMessage(message, 'user');
+        userInput.val('');
+        typingIndicator.show();
 
-    sendButton.click(sendMessage);
-    userInput.keypress(e=>{
-      if(e.which===13&&!e.shiftKey){
-        e.preventDefault();
-        sendMessage();
-      }
+        try {
+            const response = await $.ajax({
+                url: "{% url 'medical_chat' %}",
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrftoken },
+                data: { user_input: message }
+            });
+
+            if (response.status === 'question') {
+                addMessage(response.question, 'bot');
+            } else if (response.status === 'complete') {
+                addMessage(`**Medical Report**\n${response.report}`, 'bot');
+                addMessage(`**Preliminary Diagnosis**\n${response.diagnosis}`, 'bot');
+                await $.ajax({
+                    url: "{% url 'medical_chat' %}",
+                    method: 'DELETE'
+                });
+            }
+        } catch (error) {
+            const errorMsg = error.responseJSON?.message || 'Error processing request';
+            addMessage(`⚠️ ${errorMsg}`, 'bot');
+        } finally {
+            typingIndicator.hide();
+            chatMessages.scrollTop(chatMessages[0].scrollHeight);
+        }
+    }
+
+    // UI helpers
+    function addMessage(content, sender) {
+        const messageDiv = $('<div>').addClass(`message ${sender}-message`).text(content);
+        chatMessages.append(messageDiv);
+    }
+
+    // Event handlers
+    sendButton.click(handleMessage);
+    userInput.keypress(function(e) {
+        if (e.which === 13) handleMessage();
     });
 
-    async function sendMessage(){
-      const message=userInput.val().trim();
-      if(!message)return;
-      addMessage(message,'user');
-      userInput.val('');
-      typingIndicator.fadeIn(200);
-      chatMessages.scrollTop(chatMessages[0].scrollHeight);
-
-      try{
-        const csrftoken=document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const response=await $.ajax({
-          url:"{% url 'reportgen' %}",
-          method:'POST',
-          headers:{ 'X-CSRFToken':csrftoken },
-          data:{ user_input:message },
-          dataType:'json'
-        });
-        if(response.status==='success'){
-          addMessage(response.response,'bot');
-        } else {
-          addMessage('⚠️ Error: '+response.response,'bot');
+    // Initialize first question
+    $.ajax({
+        url: "{% url 'medical_chat' %}",
+        method: 'GET',
+        success: function(response) {
+            if (response.status === 'question') {
+                addMessage(response.question, 'bot');
+            }
         }
-      }catch(err){
-        addMessage('⚠️ Connection error. Please try again.','bot');
-        console.error(err);
-      }finally{
-        typingIndicator.fadeOut(200);
-        chatMessages.scrollTop(chatMessages[0].scrollHeight);
-      }
-    }
-
-    function addMessage(content,sender){
-      const cls= sender==='user' ? 'user-message':'bot-message';
-      const $m=$(`<div class="message ${cls}"><p>${content}</p></div>`)
-        .appendTo(chatMessages)
-        .hide().fadeIn(200);
-      chatHistory.push({content,sender});
-      localStorage.setItem('medicoChatHistory',JSON.stringify(chatHistory));
-    }
-  });
-  </script>
+    });
+});
+</script>
 </body>
 </html>
