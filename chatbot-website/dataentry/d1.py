@@ -54,6 +54,14 @@ def insert_random_users(n=100):
             password = faker.password(length=10)
 
             # asdfg
+            cursor.execute("SELECT number FROM users WHERE number = %s", (number,))
+            if cursor.fetchone():
+                print(f"Skipping duplicate number: {number}")
+                continue
+            cursor.execute("SELECT uid FROM users WHERE uid = %s", (uid,))
+            if cursor.fetchone():
+                print(f"Skipping duplicate UID: {uid}")
+                continue
             
 
             # Insert new user

@@ -1,0 +1,101 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid" style="background: linear-gradient(to right, #9b59b6, #8e44ad); color: white; border-radius: 10px; margin-bottom: 20px;">
+  <div class="container">
+    <h1 class="display-4">Medico Admin Dashboard</h1>
+    <p class="lead">Welcome to the Medico administrative system.</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card mb-4" style="border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <div class="card-header" style="background: #9b59b6; color: white; border-radius: 10px 10px 0 0;">
+        <h5 class="m-0"><i class="fas fa-user-md mr-2"></i>Doctor Management</h5>
+      </div>
+      <div class="card-body">
+        <p>Use these tools to manage doctor accounts in the system.</p>
+        <div class="btn-group-vertical w-100">
+          <a href="{% url 'register_doctor' %}" class="btn btn-primary mb-2" style="background: #9b59b6; border-color: #8e44ad;">
+            <i class="fas fa-user-plus mr-2"></i>Register New Doctor
+          </a>
+          <a href="{% url 'admin:chatbot_customuser_changelist' %}?is_staff__exact=1" class="btn btn-info mb-2">
+            <i class="fas fa-list-alt mr-2"></i>View All Doctors
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-6">
+    <div class="card mb-4" style="border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <div class="card-header" style="background: #3498db; color: white; border-radius: 10px 10px 0 0;">
+        <h5 class="m-0"><i class="fas fa-users mr-2"></i>User Management</h5>
+      </div>
+      <div class="card-body">
+        <p>Manage regular users and their permissions.</p>
+        <div class="btn-group-vertical w-100">
+          <a href="{% url 'admin:chatbot_customuser_add' %}" class="btn btn-primary mb-2" style="background: #3498db; border-color: #2980b9;">
+            <i class="fas fa-user-plus mr-2"></i>Add New User
+          </a>
+          <a href="{% url 'admin:chatbot_customuser_changelist' %}" class="btn btn-info">
+            <i class="fas fa-list-alt mr-2"></i>View All Users
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card" style="border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <div class="card-header" style="background: #2ecc71; color: white; border-radius: 10px 10px 0 0;">
+        <h5 class="m-0"><i class="fas fa-chart-line mr-2"></i>System Status</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 text-center mb-3">
+            <div style="font-size: 2rem; color: #9b59b6;">
+              <i class="fas fa-user-md mb-2"></i>
+            </div>
+            <h4>{{ doctor_count|default:"0" }}</h4>
+            <p class="text-muted">Doctors</p>
+          </div>
+          <div class="col-md-4 text-center mb-3">
+            <div style="font-size: 2rem; color: #3498db;">
+              <i class="fas fa-users mb-2"></i>
+            </div>
+            <h4>{{ user_count|default:"0" }}</h4>
+            <p class="text-muted">Regular Users</p>
+          </div>
+          <div class="col-md-4 text-center mb-3">
+            <div style="font-size: 2rem; color: #2ecc71;">
+              <i class="fas fa-comments mb-2"></i>
+            </div>
+            <h4>{{ chat_count|default:"0" }}</h4>
+            <p class="text-muted">Chat Sessions</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ block.super }}
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+  #content h1 {
+    display: none;
+  }
+  .btn-group-vertical .btn {
+    text-align: left;
+  }
+</style>
+{% endblock %}

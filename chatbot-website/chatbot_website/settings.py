@@ -3,29 +3,29 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'chatbot',  # Change this to your actual database name
-#         'USER': 'root',  # MySQL username (usually 'root' for local development)this
-#         'PASSWORD': '45221313',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'medico_db',
-        'USER': 'medico_user',
-        'PASSWORD': 'strongpassword',
+        'NAME': 'medico_db',  # Change this to your actual database name
+        'USER': 'root',  # MySQL username (usually 'root' for local development)this
+        'PASSWORD': 'Aditya@1998',
         'HOST': 'localhost',
         'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        }
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'medico_db',
+#         'USER': 'medico_user',
+#         'PASSWORD': 'strongpassword',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#         }
+#     }
+# }
 
 
 INSTALLED_APPS = [
@@ -45,6 +45,16 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',  # Move this BEFORE your custom middleware
+    'chatbot.middleware.AuthenticationMiddleware',  # Your custom middleware
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Django's auth middleware
     'chatbot.middleware.AuthenticationMiddleware',  # Your custom middleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -91,6 +101,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_URL = '/admin/login/'
+LOGIN_REDIRECT_URL = '/admin/'
 
 # deeeeeecod
 DEBUG = True
@@ -106,4 +118,9 @@ SECRET_KEY = keyy
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+# AUTHENTICATION_BACKENDS = [
+#     'chatbot.backends.UIDAuthBackend',
+#     'django.contrib.auth.backends.ModelBackend',  # Keep this as fallback
+# ]
+
 AUTH_USER_MODEL = 'chatbot.CustomUser'
