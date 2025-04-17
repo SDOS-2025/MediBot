@@ -205,3 +205,26 @@ def pdf_preview(request):
         messages.error(request, 'Requested file does not exist.')
         return redirect('index')
     return FileResponse(open(file_path, 'rb'), content_type='application/pdf')
+
+from django.http import JsonResponse
+from chatbot.utils import generate_response  # Import your AI model function
+
+def report_gen(request):
+    if request.method == 'POST':
+        user_input = request.POST.get('user_input', '')
+        
+        try:
+            # Get response from your AI model
+            bot_response = generate_response(user_input)
+            return JsonResponse({
+                'response': bot_response,
+                'status': 'success'
+            })
+        except Exception as e:
+            return JsonResponse({
+                'response': 'Error processing request: ' + str(e),
+                'status': 'error'
+            })
+    
+    # GET request - render chat interface
+    return render(request, 'chatbot/report_gen.html')
