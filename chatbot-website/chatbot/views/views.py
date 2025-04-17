@@ -1,4 +1,5 @@
 # chatbot/views/views.py
+import os
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import messages
@@ -48,3 +49,36 @@ def chat(request):
         bot_response = "This is a sample response"  # Replace with actual response
         return JsonResponse({'response': bot_response})
     return render(request, 'chatbot/chat.html')
+
+from chatbot.utils import generate_sample_text, text_to_pdf  # Add this import
+from django.conf import settings
+
+# chatbot/views/views.py
+from django.http import FileResponse
+# chatbot/views/views.py
+def generate_pdf(request):
+    # Generate PDF and redirect to preview
+    sample_text = generate_sample_text()
+    pdf_filename = text_to_pdf(sample_text)
+    return redirect('pdf_preview')
+
+def pdf_preview(request):
+    try:
+        pdf_files = sorted(
+            [f for f in os.listdir(settings.MEDIA_ROOT) if f.endswith('.pdf')],
+            key=lambda x: os.path.getctime(os.path.join(settings.MEDIA_ROOT, x)),
+            reverse=True
+        )
+        
+        if pdf_files:
+            latest_pdf = pdf_files[0]
+            pdf_url = f"{settings.MEDIA_URL}{latest_pdf}"
+            return render(request, 'chatbot/pdf_preview.html', {
+                'pdf_url': pdf_url,
+                'pdf_filename': latest_pdf
+            })
+            
+        return render(request, 'chatbot/pdf_preview.html', {'error': 'No reports found'})
+    
+    except FileNotFoundError:
+        return render(request, 'chatbot/pdf_preview.html', {'error': 'Report directory missing'})
