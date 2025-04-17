@@ -253,88 +253,6 @@ fixed_questions = [
     "How long have you been experiencing these symptoms?",
     "Do you have any previous medical conditions?"
 ]
-# @csrf_exempt
-# def medical_chat(request):
-#     if request.method == 'DELETE':
-#         request.session.pop('chat_session', None)
-#         return JsonResponse({'status': 'reset'})
-    
-#     # Initialize session data
-#     chat_session = request.session.get('chat_session')
-
-#     if request.method == 'POST':
-#         user_input = request.POST.get('user_input', '')
-        
-#         try:
-#             # Initialize or retrieve chat session
-#             if not chat_session:
-#                 # Create new chat session
-#                 chat = client.chats.create(
-#                     model="gemini-1.5-flash",
-#                     config=types.GenerateContentConfig(
-#                         system_instruction=system_instruction
-#                     )
-#                 )
-#                 # Store initial session data
-#                 chat_session = {
-#                     'history': [],
-#                     'question_count': 0
-#                 }
-#             else:
-#                 # Rebuild chat from history
-#                 chat = client.chats.create(
-#                     model="gemini-1.5-flash",
-#                     config=types.GenerateContentConfig(
-#                         system_instruction=system_instruction
-#                     ),
-#                     history=chat_session['history']
-#                 )
-
-#             # Send user input
-#             response = chat.send_message(user_input)
-#             bot_response = response.text.strip()
-            
-#             # Update session data
-#             chat_session['history'].extend([
-#                 {'role': 'user', 'parts': [user_input]},
-#                 {'role': 'model', 'parts': [bot_response]}
-#             ])
-#             chat_session['question_count'] += 1
-#             request.session['chat_session'] = chat_session
-            
-#             # Determine next step based on question count
-#             if chat_session['question_count'] < 3:
-#                 next_q = fixed_questions[chat_session['question_count']]
-#                 return JsonResponse({'status': 'question', 'question': next_q})
-#             elif chat_session['question_count'] == 3:
-#                 response = chat.send_message("Based on the previous answers, ask ONE relevant follow-up question.")
-#                 return JsonResponse({'status': 'question', 'question': response.text.strip()})
-#             elif chat_session['question_count'] == 4:
-#                 response = chat.send_message("Based on all previous answers, ask ONE final relevant follow-up question.")
-#                 return JsonResponse({'status': 'question', 'question': response.text.strip()})
-#             else:
-#                 # Generate final report
-#                 response = chat.send_message("Generate the medical report with delimiter as instructed.")
-#                 report, _, diagnosis = response.text.partition('###1234###')
-#                 request.session.pop('chat_session', None)
-#                 return JsonResponse({
-#                     'status': 'complete',
-#                     'report': report.strip(),
-#                     'diagnosis': diagnosis.strip()
-#                 })
-                
-#         except Exception as e:
-#             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-    
-#     else:  # GET request
-#         if not chat_session:
-#             # Start new conversation with first question
-#             return JsonResponse({'status': 'question', 'question': fixed_questions[0]})
-        
-#         # Return last bot message
-#         last_message = next((msg for msg in reversed(chat_session['history']) 
-#                           if msg['role'] == 'model'), None)
-#         return JsonResponse({'status': 'question', 'question': last_message['parts'][0]})
 @csrf_exempt
 def medical_chat(request):
     if request.method == 'DELETE':
@@ -363,20 +281,23 @@ def medical_chat(request):
                     'question_count': 0
                 }
             else:
-                # Rebuild chat from history with proper formatting
+                # Rebuild chat from history with proper Part formatting
                 chat = client.chats.create(
                     model="gemini-1.5-flash",
                     config=types.GenerateContentConfig(
                         system_instruction=system_instruction
                     ),
-                    history=chat_session['history']
+                    history=[{
+                        'role': msg['role'], 
+                        'parts': [types.Part(text=part) for part in msg['parts']]
+                    } for msg in chat_session['history']]
                 )
 
-            # Send user input as plain text
-            response = chat.send_message(user_input)
+            # Send user input as properly formatted Part
+            response = chat.send_message(types.Part(text=user_input))
             bot_response = response.text.strip()
             
-            # Update session data with text strings only
+            # Update session data with text strings
             chat_session['history'].extend([
                 {'role': 'user', 'parts': [user_input]},
                 {'role': 'model', 'parts': [bot_response]}
@@ -389,14 +310,14 @@ def medical_chat(request):
                 next_q = fixed_questions[chat_session['question_count']]
                 return JsonResponse({'status': 'question', 'question': next_q})
             elif chat_session['question_count'] == 3:
-                response = chat.send_message("Based on the previous answers, ask ONE relevant follow-up question.")
+                response = chat.send_message(types.Part(text="Based on the previous answers, ask ONE relevant follow-up question."))
                 return JsonResponse({'status': 'question', 'question': response.text.strip()})
             elif chat_session['question_count'] == 4:
-                response = chat.send_message("Based on all previous answers, ask ONE final relevant follow-up question.")
+                response = chat.send_message(types.Part(text="Based on all previous answers, ask ONE final relevant follow-up question."))
                 return JsonResponse({'status': 'question', 'question': response.text.strip()})
             else:
                 # Generate final report
-                response = chat.send_message("Generate the medical report with delimiter as instructed.")
+                response = chat.send_message(types.Part(text="Generate the medical report with delimiter as instructed."))
                 report, _, diagnosis = response.text.partition('###1234###')
                 request.session.pop('chat_session', None)
                 return JsonResponse({
@@ -410,10 +331,8 @@ def medical_chat(request):
     
     else:  # GET request
         if not chat_session:
-            # Start new conversation with first question
             return JsonResponse({'status': 'question', 'question': fixed_questions[0]})
         
-        # Return last bot message
         last_message = next((msg for msg in reversed(chat_session['history']) 
                           if msg['role'] == 'model'), None)
         return JsonResponse({'status': 'question', 'question': last_message['parts'][0]})
