@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, FileResponse
 from .models import Report
 from meditron.utils import generate_response  # Fix import statement
 from chatbot.models import CustomUser, Treatment  # add imports
+from django.contrib.auth.decorators import login_required
 import random  # add random import
+from io import BytesIO
 
 def report_view(request):
     if request.method == 'GET':
@@ -47,6 +49,22 @@ def generate_report(request):  # Fix function name
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
+@login_required
 def view_report(request, report_id):
     report = get_object_or_404(Report, id=report_id)
+    
+    # Security check - only allow viewing if the user is the patient or the assigned doctor
+    if not (request.user == report.user or 
+            (hasattr(request.user, 'doctor_profile') and report.treatment and report.treatment.doctor == request.user)):
+        return HttpResponse('Unauthorized', status=403)
+    
+    # If there's a PDF blob, return it as a PDF response
+    if report.pdf_blob:
+        return FileResponse(
+            BytesIO(report.pdf_blob),
+            content_type='application/pdf',
+            filename=f'report_{report.id}.pdf'
+        )
+    
+    # Otherwise render the report content as HTML
     return render(request, 'reports/report_detail.html', {'report': report})

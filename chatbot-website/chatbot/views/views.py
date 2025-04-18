@@ -12,6 +12,7 @@ from django.db import IntegrityError
 from reports.models import Report
 from chatbot.utils import generate_sample_text, text_to_pdf
 from django.conf import settings
+from django.utils.timezone import now
 
 def index(request):
     # Add a link to admin if user is not logged in or not staff/superuser
@@ -114,12 +115,45 @@ def doctor_dashboard(request):
         return redirect('login')
 
     # Fetch open and closed treatments assigned to the logged-in doctor
-    open_treatments = Treatment.objects.filter(doctor=request.user, is_closed=False)
-    closed_treatments = Treatment.objects.filter(doctor=request.user, is_closed=True)
+    open_treatments = Treatment.objects.filter(
+        doctor=request.user, 
+        is_closed=False
+    ).select_related('patient').prefetch_related('treatment_reports')
+
+    closed_treatments = Treatment.objects.filter(
+        doctor=request.user, 
+        is_closed=True
+    ).select_related('patient').prefetch_related('treatment_reports')
+    
+    # Get statistics
+    today_appointments = Treatment.objects.filter(
+        doctor=request.user,
+        created_at__date=now().date()
+    ).count()
+    
+    total_patients = Treatment.objects.filter(
+        doctor=request.user
+    ).values('patient').distinct().count()
+    
+    total_reports = Report.objects.filter(
+        treatment__doctor=request.user
+    ).count()
+    
+    pending_reviews = Treatment.objects.filter(
+        doctor=request.user,
+        is_closed=False
+    ).count()
 
     context = {
         'open_treatments': open_treatments,
         'closed_treatments': closed_treatments,
+        'today_appointments': today_appointments,
+        'total_patients': total_patients,
+        'total_reports': total_reports,
+        'pending_reviews': pending_reviews,
+        'recent_reports': Report.objects.filter(
+            treatment__doctor=request.user
+        ).select_related('user', 'treatment').order_by('-created_at')[:5]
     }
     return render(request, 'chatbot/doctor_dashboard.html', context)
 

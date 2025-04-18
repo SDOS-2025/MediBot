@@ -207,83 +207,107 @@
           </div>
         </div>
         
+        <!-- Stats Cards -->
         <div class="row mb-4">
           <div class="col-md-3">
             <div class="card stats-card">
               <i class="fas fa-calendar-check"></i>
-              <h2>12</h2>
+              <h2>{{ today_appointments }}</h2>
               <p>Today's Appointments</p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="card stats-card">
               <i class="fas fa-user-injured"></i>
-              <h2>48</h2>
+              <h2>{{ total_patients }}</h2>
               <p>Total Patients</p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="card stats-card">
               <i class="fas fa-file-medical-alt"></i>
-              <h2>24</h2>
+              <h2>{{ total_reports }}</h2>
               <p>Reports Generated</p>
             </div>
           </div>
           <div class="col-md-3">
             <div class="card stats-card">
               <i class="fas fa-clipboard-list"></i>
-              <h2>8</h2>
+              <h2>{{ pending_reviews }}</h2>
               <p>Pending Reviews</p>
             </div>
           </div>
         </div>
-        
+
+        <!-- Recent Reports Section -->
         <div class="row">
           <div class="col-md-8">
             <div class="card">
               <div class="card-header">
-                <h5 class="mb-0">Upcoming Appointments</h5>
+                <h5 class="mb-0">Open Treatments</h5>
               </div>
               <div class="card-body">
-                <div class="card appointment-card">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+                {% for treatment in open_treatments %}
+                  <div class="card appointment-card mb-4">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                       <div>
-                        <h6 class="mb-1">Rahul Sharma</h6>
-                        <p class="text-muted mb-0">Neurological Consultation</p>
+                        <h6 class="mb-0">Patient ID: {{ treatment.patient.uid }}</h6>
+                        {% if treatment.patient.full_name %}
+                        <small>{{ treatment.patient.full_name }}</small>
+                        {% endif %}
                       </div>
                       <div>
-                        <span class="badge badge-info">10:00 AM</span>
+                        <span class="badge badge-light">Started: {{ treatment.created_at|date:"Y-m-d H:i" }}</span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <p><strong>Required Specialty:</strong> {{ treatment.reqd|default:"General Consultation" }}</p>
+                          <p><strong>Patient Email:</strong> {{ treatment.patient.email|default:"Not provided" }}</p>
+                          <p><strong>Patient Phone:</strong> {{ treatment.patient.phone|default:"Not provided" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                          <h6>Reports</h6>
+                          {% for report in treatment.treatment_reports.all %}
+                            <div class="report-item d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
+                              <div>
+                                <span>{{ report.title }}</span><br>
+                                <small class="text-muted">{{ report.created_at|date:"Y-m-d H:i" }}</small>
+                              </div>
+                              <div class="btn-group">
+                                {% if report.pdf_blob %}
+                                  <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-info" target="_blank">
+                                    <i class="fas fa-file-pdf"></i> View PDF
+                                  </a>
+                                {% endif %}
+                                <button class="btn btn-sm btn-secondary" data-toggle="collapse" data-target="#report{{ report.id }}Content">
+                                  <i class="fas fa-file-alt"></i> View Text
+                                </button>
+                              </div>
+                            </div>
+                            <div class="collapse" id="report{{ report.id }}Content">
+                              <div class="card card-body mb-2">
+                                {{ report.content|linebreaks }}
+                              </div>
+                            </div>
+                          {% empty %}
+                            <p class="text-muted">No reports available</p>
+                          {% endfor %}
+                        </div>
+                      </div>
+                      <div class="text-right mt-3">
+                        <a href="{% url 'close_treatment' treatment.id %}" class="btn btn-warning">
+                          <i class="fas fa-check-circle"></i> Close Treatment
+                        </a>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="card appointment-card">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div>
-                        <h6 class="mb-1">Priya Patel</h6>
-                        <p class="text-muted mb-0">Follow-up Consultation</p>
-                      </div>
-                      <div>
-                        <span class="badge badge-info">11:30 AM</span>
-                      </div>
-                    </div>
+                {% empty %}
+                  <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No open treatments at the moment.
                   </div>
-                </div>
-                <div class="card appointment-card">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div>
-                        <h6 class="mb-1">Anil Kumar</h6>
-                        <p class="text-muted mb-0">New Patient Consultation</p>
-                      </div>
-                      <div>
-                        <span class="badge badge-info">2:15 PM</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                {% endfor %}
               </div>
             </div>
           </div>
@@ -294,48 +318,15 @@
                 <h5 class="mb-0">Recent Reports</h5>
               </div>
               <div class="card-body">
-                <div class="mb-3">
-                  <h6 class="mb-1">Neurological Assessment</h6>
-                  <p class="text-muted mb-2">Patient: Rahul Sharma</p>
-                  <small class="text-muted">Generated: April 15, 2025</small>
-                </div>
-                <div class="mb-3">
-                  <h6 class="mb-1">Follow-up Report</h6>
-                  <p class="text-muted mb-2">Patient: Priya Patel</p>
-                  <small class="text-muted">Generated: April 12, 2025</small>
-                </div>
-                <div class="mb-3">
-                  <h6 class="mb-1">Initial Consultation</h6>
-                  <p class="text-muted mb-2">Patient: Anil Kumar</p>
-                  <small class="text-muted">Generated: April 10, 2025</small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Assigned patients and their reports -->
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">Assigned Patients & Reports</h5>
-              </div>
-              <div class="card-body">
-                {% if patients_reports %}
-                  <ul class="list-group">
-                    {% for report in patients_reports %}
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                          <strong>{{ report.user.full_name|default:report.user.uid }}</strong> &mdash; {{ report.title }}
-                        </div>
-                        <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-primary">View Report</a>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                {% else %}
-                  <p class="text-muted">No patients assigned yet.</p>
-                {% endif %}
+                {% for report in recent_reports %}
+                  <div class="mb-3">
+                    <h6 class="mb-1">{{ report.title }}</h6>
+                    <p class="text-muted mb-2">Patient: {{ report.user.full_name|default:report.user.uid }}</p>
+                    <small class="text-muted">Generated: {{ report.created_at|date:"F d, Y" }}</small>
+                  </div>
+                {% empty %}
+                  <p class="text-muted">No recent reports.</p>
+                {% endfor %}
               </div>
             </div>
           </div>
@@ -368,7 +359,7 @@
                     </div>
                   {% endfor %}
 
-                  <h6>Closed Treatments</h6>
+                  <h6 class="mt-4">Closed Treatments</h6>
                   {% for treatment in closed_treatments %}
                     <div class="mb-3">
                       <h6>Patient: {{ treatment.patient.full_name|default:treatment.patient.uid }}</h6>
@@ -382,7 +373,7 @@
                           <li class="list-group-item text-muted">No reports yet.</li>
                         {% endfor %}
                       </ul>
-                      <span class="badge badge-secondary">Closed</span>
+                      <span class="badge badge-secondary">Closed on {{ treatment.updated_at|date:"Y-m-d H:i" }}</span>
                     </div>
                   {% endfor %}
                 {% else %}
