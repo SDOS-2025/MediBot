@@ -74,6 +74,85 @@
                    required>
           </div>
         </div>
+        <!-- Add these new fields after the password input -->
+        <div class="form-group">
+          <label for="full_name">Full Name</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+            </div>
+            <input type="text" 
+                  class="form-control" 
+                  id="full_name" 
+                  name="full_name" 
+                  placeholder="Enter your full name"
+                  required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="age">Age</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+            </div>
+            <input type="number" 
+                  class="form-control" 
+                  id="age" 
+                  name="age" 
+                  placeholder="Enter your age"
+                  min="1" 
+                  max="120"
+                  required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+            </div>
+            <input type="email" 
+                  class="form-control" 
+                  id="email" 
+                  name="email" 
+                  placeholder="Enter your email"
+                  required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-phone"></i></span>
+            </div>
+            <input type="tel" 
+                  class="form-control" 
+                  id="phone" 
+                  name="phone" 
+                  placeholder="Enter your phone number"
+                  pattern="[0-9]{10}"
+                  title="10-digit phone number"
+                  required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Address</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+            </div>
+            <textarea class="form-control" 
+                      id="address" 
+                      name="address" 
+                      placeholder="Enter your full address"
+                      rows="2"
+                      required></textarea>
+          </div>
+        </div>
 
         <button type="submit" class="btn btn-primary btn-block btn-lg">Register</button>
         <p class="text-center mt-4">Already have an account? <a href="{% url 'login' %}" class="text-primary">Login Here</a></p>
@@ -87,33 +166,68 @@
     <script>
     // Add this right before the Bootstrap JS scripts at the bottom
     document.querySelector('form').addEventListener('submit', function(e) {
-        // Reset previous errors
-        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-        document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+      // Reset previous errors
+      document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+      document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
 
-        const uid = document.getElementById('uid');
-        const password = document.getElementById('password');
-        let isValid = true;
+      const uid = document.getElementById('uid');
+      const password = document.getElementById('password');
+      const fullName = document.getElementById('full_name');
+      const age = document.getElementById('age');
+      const email = document.getElementById('email');
+      const phone = document.getElementById('phone');
+      const address = document.getElementById('address');
+      
+      let isValid = true;
 
-        // UID Validation
-        if(!/^[A-Za-z0-9]{6,20}$/.test(uid.value)) {
-            isValid = false;
-            uid.classList.add('is-invalid');
-            showError(uid, 'UID must be 6-20 alphanumeric characters');
-        }
+      // Existing UID and password validation
+      if(!/^[A-Za-z0-9]{6,20}$/.test(uid.value)) {
+          isValid = false;
+          uid.classList.add('is-invalid');
+          showError(uid, 'UID must be 6-20 alphanumeric characters');
+      }
 
-        // Password Validation
-        if(password.value.length < 8 || password.value.length > 20) {
-            isValid = false;
-            password.classList.add('is-invalid');
-            showError(password, 'Password must be 8-20 characters');
-        }
+      if(password.value.length < 8 || password.value.length > 20) {
+          isValid = false;
+          password.classList.add('is-invalid');
+          showError(password, 'Password must be 8-20 characters');
+      }
 
-        if(!isValid) {
-            e.preventDefault();
-        }
-    });
+      // New field validations
+      if(fullName.value.trim() === '') {
+          isValid = false;
+          fullName.classList.add('is-invalid');
+          showError(fullName, 'Full name is required');
+      }
 
+      if(age.value < 1 || age.value > 120) {
+          isValid = false;
+          age.classList.add('is-invalid');
+          showError(age, 'Please enter a valid age (1-120)');
+      }
+
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+          isValid = false;
+          email.classList.add('is-invalid');
+          showError(email, 'Please enter a valid email address');
+      }
+
+      if(!/^\d{10}$/.test(phone.value)) {
+          isValid = false;
+          phone.classList.add('is-invalid');
+          showError(phone, 'Please enter a 10-digit phone number');
+      }
+
+      if(address.value.trim() === '') {
+          isValid = false;
+          address.classList.add('is-invalid');
+          showError(address, 'Address is required');
+      }
+
+      if(!isValid) {
+          e.preventDefault();
+      }
+  });
     function showError(input, message) {
         const errorDiv = document.createElement('div');
         errorDiv.className = 'invalid-feedback';

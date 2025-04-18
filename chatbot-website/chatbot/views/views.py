@@ -32,14 +32,33 @@ def register_user(request):
     if request.method == 'POST':
         uid = request.POST.get('uid')
         password = request.POST.get('password')
-        
+        full_name = request.POST.get('full_name')
+        age = request.POST.get('age')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        address = request.POST.get('address')
+
         try:
-            # Create a regular user
-            CustomUser.objects.create_user(uid=uid, password=password, is_staff=False)
+            # Create user with additional fields
+            user = CustomUser.objects.create_user(
+                uid=uid,
+                password=password,
+                full_name=full_name,
+                age=age,
+                email=email,
+                phone=phone,
+                address=address,
+                is_staff=False
+            )
             messages.success(request, 'Registration successful! Please login.')
             return redirect('login')
-        except IntegrityError:  # Catch duplicate UID for regular users too
-            messages.error(request, f'Registration failed: UID "{uid}" already exists.')
+        except IntegrityError as e:
+            if 'email' in str(e):
+                messages.error(request, 'This email is already registered')
+            elif 'uid' in str(e):
+                messages.error(request, f'Registration failed: UID "{uid}" already exists.')
+            else:
+                messages.error(request, 'Registration failed due to existing account information')
             return redirect('register')
         except Exception as e:
             messages.error(request, f'Registration failed: {str(e)}')
