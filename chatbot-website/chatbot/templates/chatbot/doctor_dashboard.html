@@ -296,9 +296,12 @@
                           {% endfor %}
                         </div>
                       </div>
-                      <div class="text-right mt-3">
-                        <a href="{% url 'close_treatment' treatment.id %}" class="btn btn-warning">
-                          <i class="fas fa-check-circle"></i> Close Treatment
+                      <div class="d-flex justify-content-between mt-3">
+                        <a href="{% url 'view_treatment_history' treatment.id %}" class="btn btn-sm btn-info">
+                          <i class="fas fa-file-alt mr-1"></i> View History
+                        </a>
+                        <a href="{% url 'close_treatment' treatment.id %}" class="btn btn-sm btn-warning">
+                          <i class="fas fa-check-circle mr-1"></i> Close Treatment
                         </a>
                       </div>
                     </div>

@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Medico Chat</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body { background: #f4f7fc; font-family: Arial, sans-serif; }
+    .chat-container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 80vh; }
+    .chat-header { padding: 1rem; background: #005f73; color: #fff; }
+    .chat-body { flex: 1; padding: 1rem; overflow-y: auto; }
+    .message { margin-bottom: 1rem; max-width: 80%; padding: 0.75rem 1rem; border-radius: 12px; }
+    .bot { background: #e0f2f1; align-self: flex-start; }
+    .user { background: #005f73; color: #fff; align-self: flex-end; }
+    .chat-footer { padding: 0.75rem; border-top: 1px solid #ddd; display: flex; }
+    .chat-footer input { flex: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+    .chat-footer button { margin-left: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      <h5>Medico Chatbot</h5>
+    </div>
+    <div class="chat-body" id="chat-body">
+      <!-- messages go here -->
+    </div>
+    <div class="chat-footer">
+      {% csrf_token %}
+      <input type="text" id="user-input" placeholder="Type your answer…" autocomplete="off">
+      <button class="btn btn-primary" id="send-btn">Send</button>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      if (match) return match[2];
+    }
+
+    const csrftoken = getCookie('csrftoken');
+    const chatBody = $('#chat-body');
+    const input = $('#user-input');
+    const btn = $('#send-btn');
+
+    function addMessage(text, cls) {
+      chatBody.append($('<div>').addClass('message ' + cls).text(text));
+      chatBody.scrollTop(chatBody[0].scrollHeight);
+    }
+
+    function fetchQuestion() {
+      $.ajax({
+        url: "{% url 'medical_chat' %}",
+        method: 'GET',
+        success(resp) {
+          if (resp.status === 'question') addMessage(resp.question, 'bot');
+        }
+      });
+    }
+
+    function sendAnswer() {
+      const text = input.val().trim(); if (!text) return;
+      addMessage(text, 'user'); input.val('');
+      $.ajax({
+        url: "{% url 'medical_chat' %}",
+        method: 'POST',
+        headers: {'X-CSRFToken': csrftoken},
+        data: { user_input: text },
+        success(resp) {
+          if (resp.status === 'question') {
+            addMessage(resp.question, 'bot');
+          } else if (resp.status === 'complete') {
+            addMessage('--- Report ---', 'bot');
+            addMessage(resp.report, 'bot');
+            addMessage('--- Diagnosis ---', 'bot');
+            addMessage(resp.diagnosis, 'bot');
+          }
+        }
+      });
+    }
+
+    $(function() {
+      fetchQuestion();
+      btn.click(sendAnswer);
+      input.keypress(e => { if (e.which===13) sendAnswer(); });
+    });
+  </script>
+</body>
+</html>

@@ -1,9 +1,10 @@
 # chatbot/views/views.py
 import os
 import random
+import datetime
 from io import BytesIO
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse, FileResponse
+from django.http import JsonResponse, FileResponse, HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login, logout
@@ -13,6 +14,9 @@ from reports.models import Report
 from chatbot.utils import generate_sample_text, text_to_pdf
 from django.conf import settings
 from django.utils.timezone import now
+import logging  # Add logging import
+
+logger = logging.getLogger(__name__)  # Add logger instance
 
 
 def index(request):
@@ -168,17 +172,21 @@ def close_treatment(request, treatment_id):
     messages.success(request, f'Treatment for patient {treatment.patient.uid} has been closed.')
     return redirect('doctor_dashboard')
 
+@login_required
+def view_treatment_history(request, treatment_id):
+    # Only assigned doctor can view the history
+    treatment = get_object_or_404(Treatment, id=treatment_id, doctor=request.user)
+    # Build file path
+    history_file = os.path.join(settings.MEDIA_ROOT, 'reports_text', f"{treatment.patient.uid}.txt")
+    if not os.path.exists(history_file):
+        return HttpResponse('No history available for this patient.', status=404)
+    with open(history_file, 'r', encoding='utf-8') as f:
+        content = f.read()
+    # Return as preformatted text
+    return HttpResponse(f'<pre style="white-space: pre-wrap;">{content}</pre>')
+
 def chat(request):
-    if request.method == 'POST':
-        user_input = request.POST.get('user_input')
-        bot_response = "This is a sample response"  # Replace with actual chatbot logic
-        return JsonResponse({'response': bot_response})
-    
-    if not request.user.is_authenticated or request.user.is_staff or request.user.is_superuser:
-        messages.warning(request, 'Please log in as a patient to use the chat.')
-        return redirect('login')
-        
-    return render(request, 'chatbot/chat.html')
+    return render(request, 'chatbot/medical_chat.html')
 
 def generate_pdf(request):
     # Only patients generate PDFs
@@ -244,24 +252,64 @@ def pdf_preview(request):
 from django.http import JsonResponse
 from chatbot.utils import generate_response  # Import your AI model function
 
-def report_gen(request):
+def reportgen(request):
+    print("SEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     if request.method == 'POST':
-        user_input = request.POST.get('user_input', '')
-        
+        if not request.user.is_authenticated or hasattr(request.user, 'doctor_profile') or request.user.is_superuser:
+            return JsonResponse({'status': 'error', 'response': 'Unauthorized'}, status=403)
+
+        user_input = request.POST.get('user_input', '').strip()
+        # Prepare directory for storing history files
+        import os, datetime
+        from django.conf import settings
+
+        history_dir = os.path.join(settings.MEDIA_ROOT, 'reports_text')
+        os.makedirs(history_dir, exist_ok=True)
+        user_file = os.path.join(history_dir, f"{request.user.uid}.txt")
+
+        # Read existing history
+        previous_history = ''
+        if os.path.exists(user_file):
+            with open(user_file, 'r', encoding='utf-8') as f:
+                previous_history = f.read().strip()
+
+        # Build prompt for model including history
+        if previous_history:
+            prompt = previous_history + "\nUser: " + user_input
+        else:
+            prompt = user_input
+
+        # Generate response
         try:
-            # Get response from your AI model
-            bot_response = generate_response(user_input)
-            return JsonResponse({
-                'response': bot_response,
-                'status': 'success'
-            })
+            from chatbot.utils import generate_response
+            bot_response = generate_response(prompt)
         except Exception as e:
-            return JsonResponse({
-                'response': 'Error processing request: ' + str(e),
-                'status': 'error'
-            })
-    
+            return JsonResponse({'status': 'error', 'response': 'Error processing request: ' + str(e)})
+
+        # Append interaction to history
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        entry = f"\n=== {timestamp} ===\nUser: {user_input}\nBot: {bot_response}\n"
+        with open(user_file, 'a', encoding='utf-8') as f:
+            f.write(entry)
+            print("SXXXXXX")
+        print("Datsa addded to file")
+
+        # Create a treatment entry for doctor's review
+        from chatbot.models import CustomUser, Treatment
+        import random
+        doctors = CustomUser.objects.filter(doctor_profile__isnull=False)
+        if doctors.exists():
+            assigned = random.choice(list(doctors))
+            Treatment.objects.create(
+                patient=request.user,
+                doctor=assigned,
+                reqd=assigned.doctor_profile.specialization if assigned.doctor_profile else ''
+            )
+
+        return JsonResponse({'status': 'success', 'response': bot_response})
+
     # GET request - render chat interface
+    from django.shortcuts import render
     return render(request, 'chatbot/report_gen.html')
 
 from django.http import JsonResponse
@@ -281,92 +329,136 @@ system_instruction = (
     "\nAfter collecting all answers, generate a medical report with sections for History of Present Illness, "
     "Medications, and Allergies. Then include the delimiter '###1234###' on a new line, followed by your preliminary diagnosis."
     "\nDo NOT ask multiple questions at once. Ask EXACTLY ONE question at a time and wait for the answer."
+    "First old prompt is giiven to u if user has that will be used to generate the report. in complete info explasin that too like earlier issues and then add full info of the user and then ask the question. "
 )
 fixed_questions = [
     "What are your main symptoms?",
     "How long have you been experiencing these symptoms?",
     "Do you have any previous medical conditions?"
-]
+]# Decorator to exempt CSRF for simplicity
 @csrf_exempt
 def medical_chat(request):
+    # Prepare per-user history file
+    history_dir = os.path.join(settings.MEDIA_ROOT, 'reports_text')
+    os.makedirs(history_dir, exist_ok=True)
+    history_file = os.path.join(history_dir, f"{request.user.uid}.txt")
+
+    # Initialize or reset session on DELETE
     if request.method == 'DELETE':
         request.session.pop('chat_session', None)
         return JsonResponse({'status': 'reset'})
-    
-    # Initialize session data
-    chat_session = request.session.get('chat_session')
 
-    if request.method == 'POST':
-        user_input = request.POST.get('user_input', '')
-        
-        try:
-            # Initialize or retrieve chat session
-            if not chat_session:
-                # Create new chat session
-                chat = client.chats.create(
-                    model="gemini-1.5-flash",
-                    config=types.GenerateContentConfig(
-                        system_instruction=system_instruction
-                    )
-                )
-                # Store initial session data
-                chat_session = {
-                    'history': [],
-                    'question_count': 0
-                }
-            else:
-                # Rebuild chat from history with proper Part formatting
-                chat = client.chats.create(
-                    model="gemini-1.5-flash",
-                    config=types.GenerateContentConfig(
-                        system_instruction=system_instruction
-                    ),
-                    history=[{
-                        'role': msg['role'], 
-                        'parts': [types.Part(text=part) for part in msg['parts']]
-                    } for msg in chat_session['history']]
-                )
+    # Load or initialize session data
+    session = request.session.get('chat_session', {
+        'answers': [],
+        'question_count': 0,
+        'initial_prompt': request.POST.get('initial_prompt', '').strip() if request.method == 'POST' else ''
+    })
 
-            # Send user input as properly formatted Part
-            response = chat.send_message(types.Part(text=user_input))
-            bot_response = response.text.strip()
-            
-            # Update session data with text strings
-            chat_session['history'].extend([
-                {'role': 'user', 'parts': [user_input]},
-                {'role': 'model', 'parts': [bot_response]}
-            ])
-            chat_session['question_count'] += 1
-            request.session['chat_session'] = chat_session
-            
-            # Determine next step based on question count
-            if chat_session['question_count'] < 3:
-                next_q = fixed_questions[chat_session['question_count']]
-                return JsonResponse({'status': 'question', 'question': next_q})
-            elif chat_session['question_count'] == 3:
-                response = chat.send_message(types.Part(text="Based on the previous answers, ask ONE relevant follow-up question."))
-                return JsonResponse({'status': 'question', 'question': response.text.strip()})
-            elif chat_session['question_count'] == 4:
-                response = chat.send_message(types.Part(text="Based on all previous answers, ask ONE final relevant follow-up question."))
-                return JsonResponse({'status': 'question', 'question': response.text.strip()})
-            else:
-                # Generate final report
-                response = chat.send_message(types.Part(text="Generate the medical report with delimiter as instructed."))
-                report, _, diagnosis = response.text.partition('###1234###')
-                request.session.pop('chat_session', None)
-                return JsonResponse({
-                    'status': 'complete',
-                    'report': report.strip(),
-                    'diagnosis': diagnosis.strip()
-                })
-                
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-    
-    else:  # GET request
-        if not chat_session:
-            return JsonResponse({'status': 'question', 'question': fixed_questions[0]})
-        
-        last_message = next((msg for msg in reversed(chat_session['history']) 
-                          if msg['role'] == 'model'), None)
-        return JsonResponse({'status': 'question', 'question': last_message['parts'][0]})
+    # Handle GET: start or resume
+    if request.method == 'GET':
+        # Send first question if no answers yet
+        q_idx = session['question_count']
+        if q_idx < len(fixed_questions):
+            question = fixed_questions[q_idx]
+        elif q_idx < len(fixed_questions) + 2:
+            question = _generate_followup(session['answers'])
+        else:
+            question = "All questions answered. Please submit your answers to generate the report."
+        request.session['chat_session'] = session
+        return JsonResponse({'status': 'question', 'question': question})
+
+    # Handle POST: user submitted an answer
+    user_input = request.POST.get('user_input', '').strip()
+    # Append user answer to file history
+    with open(history_file, 'a', encoding='utf-8') as f:
+        f.write(f"Q{session['question_count'] + 1}: {user_input}\n")
+
+    # Update session
+    session['answers'].append(user_input)
+    session['question_count'] += 1
+    request.session['chat_session'] = session
+
+    # Decide next step
+    q_idx = session['question_count']
+    # Next fixed question
+    if q_idx < len(fixed_questions):
+        next_q = fixed_questions[q_idx]
+        return JsonResponse({'status': 'question', 'question': next_q})
+    # Two dynamic follow-ups
+    elif q_idx < len(fixed_questions) + 2:
+        next_q = _generate_followup(session['answers'])
+        return JsonResponse({'status': 'question', 'question': next_q})
+    # All 5 questions done, generate report
+    else:
+        full_history = _compile_history(session['initial_prompt'], session['answers'])
+        report, diagnosis = _generate_report(full_history)
+        # Write report & diagnosis to file
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with open(history_file, 'a', encoding='utf-8') as f:
+            f.write(f"=== {timestamp} ===\nReport:\n{report}\nDiagnosis: {diagnosis}\n")
+        # Create treatment entry
+        doctors = CustomUser.objects.filter(doctor_profile__isnull=False)
+        if doctors:
+            assigned = random.choice(doctors)
+            Treatment.objects.create(
+                patient=request.user,
+                doctor=assigned,
+                reqd=assigned.doctor_profile.specialization or '',
+                is_closed=False
+            )
+        # Clear session
+        request.session.pop('chat_session', None)
+        return JsonResponse({'status': 'complete', 'report': report, 'diagnosis': diagnosis})
+
+
+def _generate_followup(answers):
+    """
+    Use GenAI to generate a single follow-up question based on previous answers.
+    """
+    prompt = (
+        "Based on these patient answers, ask exactly one relevant follow-up question:\n"
+        + "\n".join(f"- {a}" for a in answers)
+    )
+    chat = client.chats.create(
+        model="gemini-1.5-flash",
+        config=types.GenerateContentConfig(
+            system_instruction="You are a helpful medical assistant.",
+        )
+    )
+    response = chat.send_message(types.Part(text=prompt))
+    return response.text.strip()
+
+
+def _compile_history(initial_prompt, answers):
+    """
+    Compile the initial prompt (if any) and patient answers into a single text blob.
+    """
+    history = []
+    if initial_prompt:
+        history.append(f"Old Prompt: {initial_prompt}")
+    for idx, ans in enumerate(answers, start=1):
+        q = fixed_questions[idx-1] if idx <= len(fixed_questions) else f"Follow-up {idx - len(fixed_questions)}"
+        history.append(f"{q} {ans}")
+    return "\n".join(history)
+
+
+def _generate_report(history_text):
+    """
+    Send the full history to GenAI to generate the medical report and diagnosis.
+    """
+    system_instruction = (
+        "You are a medical assistant. Generate a medical report with sections for History of Present Illness, Medications, and Allergies, "
+        "then on a new line put '###1234###' and your preliminary diagnosis."
+    )
+    prompt = history_text
+    chat = client.chats.create(
+        model="gemini-1.5-flash",
+        config=types.GenerateContentConfig(
+            system_instruction=system_instruction
+        )
+    )
+    response = chat.send_message(types.Part(text=prompt))
+    full = response.text.strip()
+    report, _, diag = full.partition('###1234###')
+    return report.strip(), diag.strip()

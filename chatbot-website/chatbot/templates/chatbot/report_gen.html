@@ -216,67 +216,49 @@ body {
 $(function() {
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const chatMessages = $('#chat-messages');
-    const userInput = $('#user-input');
+    const typingIndicator = $('#typing-indicator').hide();
     const sendButton = $('#send-button');
-    const typingIndicator = $('#typing-indicator');
+    const userInput = $('#user-input');
 
-    // Message handler
     async function handleMessage() {
         const message = userInput.val().trim();
         if (!message) return;
 
-        addMessage(message, 'user');
+        addMessage(message, 'user-message');
         userInput.val('');
         typingIndicator.show();
 
         try {
             const response = await $.ajax({
-                url: "{% url 'medical_chat' %}",
+                url: "{% url 'reportgen' %}",
                 method: 'POST',
                 headers: { 'X-CSRFToken': csrftoken },
                 data: { user_input: message }
             });
 
-            if (response.status === 'question') {
-                addMessage(response.question, 'bot');
-            } else if (response.status === 'complete') {
-                addMessage(`**Medical Report**\n${response.report}`, 'bot');
-                addMessage(`**Preliminary Diagnosis**\n${response.diagnosis}`, 'bot');
-                await $.ajax({
-                    url: "{% url 'medical_chat' %}",
-                    method: 'DELETE'
-                });
+            // The report_gen view returns bot_response directly
+            if (response.status === 'success') {
+                addMessage(response.response, 'bot-message');
+            } else {
+                addMessage(`⚠️ ${response.response || 'Error processing request'}`, 'bot-message');
             }
         } catch (error) {
-            const errorMsg = error.responseJSON?.message || 'Error processing request';
-            addMessage(`⚠️ ${errorMsg}`, 'bot');
+            const errorMsg = error.responseJSON?.response || 'Error processing request';
+            addMessage(`⚠️ ${errorMsg}`, 'bot-message');
         } finally {
             typingIndicator.hide();
             chatMessages.scrollTop(chatMessages[0].scrollHeight);
         }
     }
 
-    // UI helpers
-    function addMessage(content, sender) {
-        const messageDiv = $('<div>').addClass(`message ${sender}-message`).text(content);
+    function addMessage(content, className) {
+        const messageDiv = $('<div>').addClass(`message ${className}`).text(content);
         chatMessages.append(messageDiv);
     }
 
-    // Event handlers
     sendButton.click(handleMessage);
     userInput.keypress(function(e) {
         if (e.which === 13) handleMessage();
-    });
-
-    // Initialize first question
-    $.ajax({
-        url: "{% url 'medical_chat' %}",
-        method: 'GET',
-        success: function(response) {
-            if (response.status === 'question') {
-                addMessage(response.question, 'bot');
-            }
-        }
     });
 });
 </script>
