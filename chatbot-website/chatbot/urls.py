@@ -5,11 +5,11 @@ from django.conf import settings
 from .views.views import reportgen, medical_chat
 
 urlpatterns = [
+    # path('admin/register_doctor/', register_doctor, name='register_doctor'),  # Admin-only doctor registration
     path('', index, name='index'),
     path('login/', user_login, name='login'),
     path('logout/', user_logout, name='logout'),
     path('register/', register_user, name='register'),
-    path('register_doctor/', register_doctor, name='register_doctor'),  # Admin-only doctor registration
     path('chat/', chat, name='chat'),
     path('doctor_dashboard/', doctor_dashboard, name='doctor_dashboard'),
     path('treatment/close/<int:treatment_id>/', close_treatment, name='close_treatment'),  # Close treatment

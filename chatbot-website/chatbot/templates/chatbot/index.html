@@ -3,234 +3,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medico Health Assistant</title>
-        <style>
-        /* General styling */
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #71b7e6, #9b59b6);
-            margin: 0;
-            padding: 0;
-            color: #2d3436;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medico Health Assistant</title>
+  <!-- Bootstrap & FontAwesome -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    /* ─────────── Color Palette ─────────── */
+    :root {
+      --primary: #9b59b6;
+      --secondary: #71b7e6;
+      --text: #2d3436;
+      --muted: #4a4a4a;
+    }
 
-        /* Header styling */
-        header {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            padding: 0.5rem 0;             /* ↓ reduced from 1rem */
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+    /* ─────────── Reset & Base ─────────── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      /* Enhanced multi-stop gradient */
+      background: linear-gradient(135deg, var(--secondary), var(--primary), var(--secondary));
+      background-size: 300% 300%;
+      animation: gradientBG 10s ease infinite;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
 
-        /* Make the nav container a flex row & center items */
-        header nav .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+    /* ─────────── Header ─────────── */
+    header {
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(8px);
+      position: sticky; top: 0;
+      z-index: 1000;
+      padding: 0.5rem 1rem;
+    }
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      color: var(--text) !important;
+      animation: fadeInDown 1s ease;
+    }
+    .navbar-brand i { color: var(--primary); margin-right: 0.5rem; }
+    .nav-link {
+      font-weight: 500;
+      padding: 0.25rem 0.75rem !important;
+      border-radius: 6px;
+      transition: background .3s, transform .3s;
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 50%; bottom: 0;
+      width: 0; height: 2px;
+      background: var(--primary);
+      transition: width .3s, left .3s;
+    }
+    .nav-link:hover {
+      background: rgba(155,89,182,0.1);
+      transform: translateY(-2px);
+    }
+    .nav-link:hover::after {
+      width: 80%; left: 10%;
+    }
 
-        .navbar-brand {
-            font-weight: 700;
-            color: #2d3436 !important;
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            margin-bottom: 0;             /* ensure no extra bottom margin */
-        }
+    /* ─────────── Main ─────────── */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    #introduction {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2.5rem;
+      max-width: 550px;
+      text-align: center;
+      animation: fadeInUp 1s ease;
+    }
+    #introduction h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    #introduction p {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+    #start-chat {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform .3s, box-shadow .3s;
+    }
+    #start-chat:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(155,89,182,0.4);
+    }
 
-        .navbar-brand i {
-            color: #9b59b6;
-            margin-right: 0.5rem;
-        }
-
-        /* Force the nav items into a single row */
-        .navbar-nav {
-            display: flex !important;
-            flex-direction: row;
-            align-items: center;
-        }
-
-        .nav-item {
-            margin-left: 1rem;            /* spacing between items */
-        }
-
-        .nav-link {
-            color: #2d3436 !important;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.5rem 1rem !important;
-            border-radius: 8px;
-        }
-
-        .nav-link:hover {
-            color: #9b59b6 !important;
-            background: rgba(155,89,182,0.1);
-        }
-
-        /* Main content */
-        main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-        }
-
-        #introduction {
-            background: rgba(255,255,255,0.95);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            text-align: center;
-            max-width: 600px;
-            width: 100%;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            margin: 2rem 0;
-        }
-
-        #introduction p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            color: #4a4a4a;
-            margin-bottom: 2rem;
-        }
-
-        /* Button styling */
-        #start-chat {
-            background: #9b59b6;
-            color: #fff;
-            padding: 1rem 2.5rem;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(155,89,182,0.3);
-        }
-
-        #start-chat:hover {
-            background: #8e44ad;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(155,89,182,0.4);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 1.5rem 0;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(10px);
-            color: #4a4a4a;
-            margin-top: auto;
-            border-top: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .btn-outline-light {
-            border-color: rgba(255,255,255,0.3);
-            color: #2d3436;
-        }
-
-        .btn-outline-light:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.5);
-        }
-
-        .navbar-toggler {
-            border-color: rgba(155,89,182,0.2);
-        }
-
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28155,89,182,0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
-    </style>
-
+    /* ─────────── Animations ─────────── */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      25% { background-position: 50% 100%; }
+      50% { background-position: 100% 50%; }
+      75% { background-position: 50% 0%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-transparent">
-            <div class="container">
-                <a class="navbar-brand" href="#">
-                    <i class="fas fa-heartbeat"></i>Medico
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#features">Features</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#about">About</a>
-                        </li>
-                        {% if user.is_authenticated %}
-                            {% if user.is_staff and not user.is_superuser %}
-                                <li class="nav-item">
-                                    <a class="nav-link btn btn-outline-light btn-sm" href="{% url 'doctor_dashboard' %}">Doctor Dashboard</a>
-                                </li>
-                            {% elif user.is_superuser %}
-                                <li class="nav-item">
-                                    <a class="nav-link btn btn-outline-light btn-sm" href="{% url 'admin:index' %}">Admin Dashboard</a>
-                                </li>
-                            {% else %}
-                                <li class="nav-item">
-                                    <a class="nav-link btn btn-outline-light btn-sm" href="{% url 'chat' %}">Chat Now</a>
-                                </li>
-                            {% endif %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'logout' %}">Logout ({{ user.uid }})</a>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link btn btn-outline-light btn-sm" href="{% url 'login' %}">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link btn btn-light btn-sm ml-2" href="{% url 'register' %}" style="background: #9b59b6; color: white !important;">Register</a>
-                            </li>
-                            {% if show_admin_link %}
-                            <li class="nav-item">
-                                <a class="nav-link ml-3" href="{% url 'admin:index' %}" title="Admin Login"><i class="fas fa-user-shield"></i></a>
-                            </li>
-                            {% endif %}
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <i class="fas fa-heartbeat"></i>Medico
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav align-items-center">
+            <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+            <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+            {% if user.is_authenticated %}
+              {% if user.is_staff and not user.is_superuser %}
+                <li class="nav-item"><a class="nav-link btn btn-sm btn-outline-primary" href="{% url 'doctor_dashboard' %}">Doctor</a></li>
+              {% elif user.is_superuser %}
+                <li class="nav-item"><a class="nav-link btn btn-sm btn-outline-primary" href="{% url 'admin:index' %}">Admin</a></li>
+              {% else %}
+                <li class="nav-item"><a class="nav-link btn btn-sm btn-outline-primary" href="{% url 'chat' %}">Chat</a></li>
+              {% endif %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout ({{ user.uid }})</a></li>
+            {% else %}
+              <li class="nav-item"><a class="nav-link btn btn-sm btn-outline-primary" href="{% url 'login' %}">Login</a></li>
+              <li class="nav-item"><a class="nav-link btn btn-sm btn-primary ml-2" href="{% url 'register' %}">Register</a></li>
+              {% if show_admin_link %}
+                <li class="nav-item ml-2"><a class="nav-link" href="{% url 'admin:index' %}" title="Admin Login"><i class="fas fa-user-shield"></i></a></li>
+              {% endif %}
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
 
-    <main>
-        <section id="introduction">
-            <h2 style="color: #2d3436; margin-bottom: 1.5rem;">Your Personal Health Companion</h2>
-            <p>Experience seamless healthcare management with our intelligent chatbot assistant. Get personalized medical guidance, appointment scheduling, and health tracking all in one place.</p>
-            <button id="start-chat">Start Health Check</button>
-        </section>
-    </main>
+  <main>
+    <section id="introduction">
+      <h2>Your Personal Health Companion</h2>
+      <p>Experience seamless healthcare management with our intelligent chatbot assistant. Get personalized medical guidance, appointment scheduling, and health tracking all in one place.</p>
+      <button id="start-chat">Start Health Check</button>
+    </section>
+  </main>
 
-    <footer>
-        <p>&copy; 2025 Medico Health Systems. Dedicated to your wellbeing.</p>
-    </footer>
+  <!-- Footer removed as requested -->
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const startChatButton = document.getElementById("start-chat");
-            
-            startChatButton.addEventListener("click", function () {
-                window.location.href = "{% url 'chat' %}";
-            });
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('start-chat').addEventListener('click', ()=> {
+      window.location.href = "{% url 'chat' %}";
+    });
+  </script>
 </body>
 </html>
