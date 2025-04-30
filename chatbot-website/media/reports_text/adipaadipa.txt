@@ -1,0 +1,37 @@
+Q1: cold
+Q2: 5 days
+Q3: no
+Q1: cold
+Q2: 2 days
+Q3: no
+Q4: no
+Q5: yes
+Q1: cold
+Q2: 2 days
+Q3: no
+Q1: cold
+Q2: 2 days
+Q3: no
+Q4: fever
+Q5: no
+=== 2025-05-01 02:11:42 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presented with a complaint of a cold, of two days duration.  Initially, the primary symptom was a cold.  A follow-up reported the development of a fever.  No other significant symptoms were reported in subsequent follow-ups.
+
+
+**2. Medications:**
+
+None reported.
+
+
+**3. Allergies:**
+
+None reported.
+Diagnosis: **Preliminary Diagnosis:**  Upper Respiratory Infection (URI)
+
+
+**Note:** This is a preliminary diagnosis based on limited information. Further evaluation, including physical examination and potentially laboratory testing, may be necessary to confirm the diagnosis and rule out other potential causes.

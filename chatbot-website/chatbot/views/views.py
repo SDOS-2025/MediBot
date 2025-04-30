@@ -335,9 +335,12 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from google import genai
 from google.genai import types
+import google.generativeai as genai
+genai.configure(api_key="AIzaSyB0R26JpwnrxR1iHP7SRdlXImYhG2NAYLQ")
 
-client = genai.Client(api_key="AIzaSyB0R26JpwnrxR1iHP7SRdlXImYhG2NAYLQ")
-
+# Create client instances for different purposes
+med_chat_model = genai.GenerativeModel('gemini-1.5-flash')
+report_model = genai.GenerativeModel('gemini-1.5-flash')
 system_instruction = (
     "You are a medical assistant chatbot. Follow this EXACT process:"
     "\n1. Ask the patient: 'What are your main symptoms?'"
@@ -431,6 +434,23 @@ def medical_chat(request):
         return JsonResponse({'status': 'complete', 'report': report, 'diagnosis': diagnosis})
 
 
+# def _generate_followup(answers):
+#     """
+#     Use GenAI to generate a single follow-up question based on previous answers.
+#     """
+#     prompt = (
+#         "Based on these patient answers, ask exactly one relevant follow-up question:\n"
+#         + "\n".join(f"- {a}" for a in answers)
+#     )
+#     chat = client.chats.create(
+#         model="gemini-1.5-flash",
+#         config=types.GenerateContentConfig(
+#             system_instruction="You are a helpful medical assistant.",
+#         )
+#     )
+#     response = chat.send_message(types.Part(text=prompt))
+#     return response.text.strip()
+
 def _generate_followup(answers):
     """
     Use GenAI to generate a single follow-up question based on previous answers.
@@ -439,16 +459,12 @@ def _generate_followup(answers):
         "Based on these patient answers, ask exactly one relevant follow-up question:\n"
         + "\n".join(f"- {a}" for a in answers)
     )
-    chat = client.chats.create(
-        model="gemini-1.5-flash",
-        config=types.GenerateContentConfig(
-            system_instruction="You are a helpful medical assistant.",
-        )
+    
+    response = med_chat_model.generate_content(
+        prompt,
+        generation_config={"temperature": 0.7}
     )
-    response = chat.send_message(types.Part(text=prompt))
     return response.text.strip()
-
-
 def _compile_history(initial_prompt, answers):
     """
     Compile the initial prompt (if any) and patient answers into a single text blob.
@@ -462,22 +478,46 @@ def _compile_history(initial_prompt, answers):
     return "\n".join(history)
 
 
+# def _generate_report(history_text):
+#     """
+#     Send the full history to GenAI to generate the medical report and diagnosis.
+#     """
+#     system_instruction = (
+#         "You are a medical assistant. Generate a medical report with sections for History of Present Illness, Medications, and Allergies, "
+#         "then on a new line put '###1234###' and your preliminary diagnosis."
+#     )
+#     prompt = history_text
+#     chat = client.chats.create(
+#         model="gemini-1.5-flash",
+#         config=types.GenerateContentConfig(
+#             system_instruction=system_instruction
+#         )
+#     )
+#     response = chat.send_message(types.Part(text=prompt))
+#     full = response.text.strip()
+#     report, _, diag = full.partition('###1234###')
+#     return report.strip(), diag.strip()
+
 def _generate_report(history_text):
     """
     Send the full history to GenAI to generate the medical report and diagnosis.
     """
-    system_instruction = (
-        "You are a medical assistant. Generate a medical report with sections for History of Present Illness, Medications, and Allergies, "
-        "then on a new line put '###1234###' and your preliminary diagnosis."
+    prompt = f"""
+    Generate a medical report with these sections:
+    1. History of Present Illness
+    2. Medications
+    3. Allergies
+    
+    Followed by the delimiter '###1234###' and your preliminary diagnosis.
+    
+    Patient history:
+    {history_text}
+    """
+    
+    response = report_model.generate_content(
+        prompt,
+        generation_config={"temperature": 0.3}
     )
-    prompt = history_text
-    chat = client.chats.create(
-        model="gemini-1.5-flash",
-        config=types.GenerateContentConfig(
-            system_instruction=system_instruction
-        )
-    )
-    response = chat.send_message(types.Part(text=prompt))
     full = response.text.strip()
     report, _, diag = full.partition('###1234###')
     return report.strip(), diag.strip()

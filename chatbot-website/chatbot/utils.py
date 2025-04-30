@@ -1,11 +1,9 @@
-from meditron.model import MeditronModel
-
-model = MeditronModel()
+from chatbot.ai_wrapper import send_chat_message, generate_medical_report
 
 def generate_response(user_input):
-    processed_input = user_input.strip().lower()
+    processed_input = user_input.strip()
     try:
-        response = model.generate_response(processed_input)
+        response = send_chat_message(processed_input)
     except Exception as e:
         response = "Sorry, I am unable to process your request at the moment."
     return response
