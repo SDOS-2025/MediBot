@@ -1,0 +1,1 @@
+{"name":"Local: q1","url":"d:\\Merilife\\Merilife\\q1.py","tests":[{"id":1746129600672,"input":"8\n2\nAB\n2\nBA\n4\nABAB\n4\nBABA\n3\nBAA\n5\nAAAAB\n5\nBAAAB\n6\nBBBA\n","output":"Alice\nBob\nBob\nBob\nAlice\nAlice\nBob\nAlice\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\Merilife\\Merilife\\q1.py","group":"local","local":true}
