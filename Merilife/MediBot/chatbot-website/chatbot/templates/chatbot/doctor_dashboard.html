@@ -1,0 +1,397 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    :root {
+      --primary: #9b59b6;
+      --secondary: #8e44ad;
+      --light-bg: #f8f9fa;
+      --border-color: #e1e4e8;
+    }
+    
+    body {
+      background-color: #f4f7fc;
+      font-family: 'Arial', sans-serif;
+    }
+    
+    .sidebar {
+      background: white;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      height: 100vh;
+      position: fixed;
+      width: 250px;
+      transition: all 0.3s;
+    }
+    
+    .sidebar-header {
+      padding: 20px;
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .sidebar ul.components {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .sidebar ul li a {
+      padding: 15px;
+      font-size: 1.1em;
+      display: block;
+      color: #333;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    
+    .sidebar ul li a:hover {
+      background: var(--light-bg);
+      color: var(--primary);
+    }
+    
+    .sidebar ul li.active > a {
+      color: var(--primary);
+      background: var(--light-bg);
+      border-left: 4px solid var(--primary);
+    }
+    
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+      transition: all 0.3s;
+    }
+    
+    .card {
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      transition: transform 0.3s;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .card-header {
+      border-radius: 10px 10px 0 0;
+      background-color: white;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .stats-card {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .stats-card i {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+    
+    .stats-card h2 {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .stats-card p {
+      color: #6c757d;
+    }
+    
+    .profile-header {
+      background: linear-gradient(to right, #9b59b6, #71b7e6);
+      color: white;
+      padding: 30px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .nav-tabs .nav-link.active {
+      color: var(--primary);
+      font-weight: bold;
+    }
+    
+    .appointment-card {
+      margin-bottom: 15px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .logout-btn {
+      background: var(--secondary);
+      color: white;
+      transition: all 0.3s;
+    }
+    
+    .logout-btn:hover {
+      background: #7d3c98;
+      color: white;
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        margin-left: -250px;
+      }
+      .sidebar.active {
+        margin-left: 0;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+      .main-content.active {
+        margin-left: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper d-flex">
+    <!-- Sidebar -->
+    <nav id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-heartbeat mr-2"></i>Medico</h3>
+        <p class="mb-0">Doctor Portal</p>
+      </div>
+      
+      <ul class="list-unstyled components">
+        <li class="active">
+          <a href="#"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</a>
+        </li>
+        <li>
+          <a href="#"><i class="fas fa-calendar-check mr-2"></i>Appointments</a>
+        </li>
+        <li>
+          <a href="#"><i class="fas fa-user-injured mr-2"></i>Patients</a>
+        </li>
+        <li>
+          <a href="#"><i class="fas fa-file-medical-alt mr-2"></i>Reports</a>
+        </li>
+        <li>
+          <a href="#"><i class="fas fa-user-md mr-2"></i>Profile</a>
+        </li>
+        <li>
+          <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+        </li>
+      </ul>
+    </nav>
+    
+    <!-- Page Content -->
+    <div class="main-content">
+      <div class="container-fluid">
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <div class="profile-header">
+              <div class="row">
+                <div class="col-md-8">
+                  <h2>Welcome, Dr. {{ request.user.full_name|default:request.user.uid }}</h2>
+                  <p class="mb-0">
+                    {% if request.user.specialization %}
+                      {{ request.user.specialization }} | {{ request.user.qualification|default:"" }}
+                    {% else %}
+                      Medical Professional
+                    {% endif %}
+                  </p>
+                </div>
+                <div class="col-md-4 text-right">
+                  <a href="{% url 'logout' %}" class="btn logout-btn">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="card stats-card">
+              <i class="fas fa-calendar-check"></i>
+              <h2>{{ today_appointments }}</h2>
+              <p>Today's Appointments</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card stats-card">
+              <i class="fas fa-user-injured"></i>
+              <h2>{{ total_patients }}</h2>
+              <p>Total Patients</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card stats-card">
+              <i class="fas fa-file-medical-alt"></i>
+              <h2>{{ total_reports }}</h2>
+              <p>Reports Generated</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card stats-card">
+              <i class="fas fa-clipboard-list"></i>
+              <h2>{{ pending_reviews }}</h2>
+              <p>Pending Reviews</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Reports Section -->
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Open Treatments</h5>
+              </div>
+              <div class="card-body">
+                {% for treatment in open_treatments %}
+                  <div class="card appointment-card mb-4">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="mb-0">Patient ID: {{ treatment.patient.uid }}</h6>
+                        {% if treatment.patient.full_name %}
+                        <small>{{ treatment.patient.full_name }}</small>
+                        {% endif %}
+                      </div>
+                      <div>
+                        <span class="badge badge-light">Started: {{ treatment.created_at|date:"Y-m-d H:i" }}</span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <p><strong>Required Specialty:</strong> {{ treatment.reqd|default:"General Consultation" }}</p>
+                          <p><strong>Patient Email:</strong> {{ treatment.patient.email|default:"Not provided" }}</p>
+                          <p><strong>Patient Phone:</strong> {{ treatment.patient.phone|default:"Not provided" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                          <h6>Reports</h6>
+                          {% for report in treatment.treatment_reports.all %}
+                            <div class="report-item d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
+                              <div>
+                                <span>{{ report.title }}</span><br>
+                                <small class="text-muted">{{ report.created_at|date:"Y-m-d H:i" }}</small>
+                              </div>
+                              <div class="btn-group">
+                                {% if report.pdf_blob %}
+                                  <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-info" target="_blank">
+                                    <i class="fas fa-file-pdf"></i> View PDF
+                                  </a>
+                                {% endif %}
+                                <button class="btn btn-sm btn-secondary" data-toggle="collapse" data-target="#report{{ report.id }}Content">
+                                  <i class="fas fa-file-alt"></i> View Text
+                                </button>
+                              </div>
+                            </div>
+                            <div class="collapse" id="report{{ report.id }}Content">
+                              <div class="card card-body mb-2">
+                                {{ report.content|linebreaks }}
+                              </div>
+                            </div>
+                          {% empty %}
+                            <p class="text-muted">No reports available</p>
+                          {% endfor %}
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between mt-3">
+                        <a href="{% url 'view_treatment_history' treatment.id %}" class="btn btn-sm btn-info">
+                          <i class="fas fa-file-alt mr-1"></i> View History
+                        </a>
+                        <a href="{% url 'close_treatment' treatment.id %}" class="btn btn-sm btn-warning">
+                          <i class="fas fa-check-circle mr-1"></i> Close Treatment
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                {% empty %}
+                  <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No open treatments at the moment.
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Recent Reports</h5>
+              </div>
+              <div class="card-body">
+                {% for report in recent_reports %}
+                  <div class="mb-3">
+                    <h6 class="mb-1">{{ report.title }}</h6>
+                    <p class="text-muted mb-2">Patient: {{ report.user.full_name|default:report.user.uid }}</p>
+                    <small class="text-muted">Generated: {{ report.created_at|date:"F d, Y" }}</small>
+                  </div>
+                {% empty %}
+                  <p class="text-muted">No recent reports.</p>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Treatments and Reports -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Patient Treatments & Reports</h5>
+              </div>
+              <div class="card-body">
+                {% if open_treatments or closed_treatments %}
+                  <h6>Ongoing Treatments</h6>
+                  {% for treatment in open_treatments %}
+                    <div class="mb-3">
+                      <h6>Patient: {{ treatment.patient.full_name|default:treatment.patient.uid }}</h6>
+                      <ul class="list-group mb-2">
+                        {% for report in treatment.treatment_reports.all %}
+                          <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ report.title }} ({{ report.created_at|date:"Y-m-d H:i" }})</span>
+                            <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-primary">View</a>
+                          </li>
+                        {% empty %}
+                          <li class="list-group-item text-muted">No reports yet.</li>
+                        {% endfor %}
+                      </ul>
+                      <a href="{% url 'close_treatment' treatment.id %}" class="btn btn-sm btn-warning">Close Treatment</a>
+                    </div>
+                  {% endfor %}
+
+                  <h6 class="mt-4">Closed Treatments</h6>
+                  {% for treatment in closed_treatments %}
+                    <div class="mb-3">
+                      <h6>Patient: {{ treatment.patient.full_name|default:treatment.patient.uid }}</h6>
+                      <ul class="list-group mb-2">
+                        {% for report in treatment.treatment_reports.all %}
+                          <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ report.title }} ({{ report.created_at|date:"Y-m-d H:i" }})</span>
+                            <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-primary">View</a>
+                          </li>
+                        {% empty %}
+                          <li class="list-group-item text-muted">No reports yet.</li>
+                        {% endfor %}
+                      </ul>
+                      <span class="badge badge-secondary">Closed on {{ treatment.updated_at|date:"Y-m-d H:i" }}</span>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <p class="text-muted">No treatments assigned.</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

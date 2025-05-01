@@ -1,0 +1,27 @@
+/neurology_chatbot
+│
+├── chatbot/                    # Main Django project
+│   ├── __init__.py
+│   ├── settings.py             # Configurations (MongoDB, authentication)
+│   ├── urls.py                 # URL routing
+│   ├── wsgi.py                 # WSGI entry point
+│   ├── asgi.py                 # ASGI entry point (for future real-time features)
+│   ├── database.py             # MongoDB connection setup
+│   ├── authentication.py       # Role-based access control (RBAC)
+│
+├── chatbot_app/                # Main Django app (handles chatbot logic)
+│   ├── __init__.py
+│   ├── models.py               # Database models (Patient, Doctor, Report)
+│   ├── views.py                # Chatbot logic & report generation
+│   ├── urls.py                 # URL routes for chatbot endpoints
+│   ├── templates/              # HTML templates for UI (if needed)
+│   │   ├── chatbot.html
+│   │   ├── doctor_dashboard.html
+│   ├── static/                 # Static files (CSS, JS)
+│
+├── templates/                  # Global Django templates
+│   ├── base.html               # Base template for UI
+│
+├── manage.py                   # Django CLI
+├── requirements.txt            # Dependencies
+├── README.md                   # Project documentation

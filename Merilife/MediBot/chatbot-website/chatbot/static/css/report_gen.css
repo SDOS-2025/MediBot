@@ -1,0 +1,89 @@
+/* Report Generation Chat Specific Styles */
+.chat-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    background: #005f73;
+    color: white;
+    padding: 20px;
+    border-radius: 15px 15px 0 0;
+}
+
+.chat-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    max-width: 70%;
+    padding: 15px;
+    border-radius: 20px;
+    margin: 5px 0;
+}
+
+.user-message {
+    background: #0077b6;
+    color: white;
+    align-self: flex-end;
+    border-radius: 20px 20px 0 20px;
+}
+
+.bot-message {
+    background: #e9ecef;
+    color: #333;
+    align-self: flex-start;
+    border-radius: 20px 20px 20px 0;
+}
+
+.input-container {
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    gap: 10px;
+}
+
+#user-input {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+}
+
+#send-button {
+    padding: 15px 25px;
+    background: #0077b6;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#send-button:hover {
+    background: #005f73;
+}
+
+.typing-indicator {
+    display: none;
+    padding: 10px 20px;
+    color: #666;
+    font-style: italic;
+}

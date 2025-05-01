@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Medico Report Generator</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<style>
+:root {
+  --primary-color: #005f73;
+  --secondary-color: #00b4d8;
+  --accent-color: #83c5be;
+  --text-color: #333333;
+  --recording-color: #e74c3c;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated Medical Icons Background */
+.background-elements {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+.medical-icon {
+  position: absolute;
+  opacity: 0.1;
+  animation: float 20s infinite linear;
+}
+@keyframes float {
+  0%   { transform: translateY(0) rotate(0deg); }
+  50%  { transform: translateY(-40px) rotate(180deg); }
+  100% { transform: translateY(0) rotate(360deg); }
+}
+
+/* Gradient Mesh & Particles */
+.gradient-mesh {
+  position: absolute; inset:0;
+  background:
+    radial-gradient(circle at 80% 20%, var(--accent-color) 0%, transparent 15%),
+    radial-gradient(circle at 20% 80%, var(--secondary-color) 0%, transparent 15%),
+    radial-gradient(circle at 50% 50%, var(--primary-color) 0%, transparent 15%);
+  mix-blend-mode: multiply;
+  opacity: 0.1;
+}
+.floating-particles::before {
+  content:"";
+  position:absolute; inset:-50%;
+  background-image:
+    radial-gradient(circle at center, var(--primary-color) 0%, transparent 2%),
+    radial-gradient(circle at center, var(--secondary-color) 0%, transparent 2%);
+  background-size:50px 50px;
+  animation: particle-flow 40s linear infinite;
+}
+@keyframes particle-flow {
+  to { transform: translate(-50%, -50%); }
+}
+
+/* Chat container */
+.chat-container {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  height: 90vh;
+  margin: 2vh auto;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border:1px solid rgba(255,255,255,0.3);
+  box-shadow:0 8px 32px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Header */
+.chat-header {
+  padding: 1rem;
+  border-bottom:1px solid #e0e0e0;
+  display:flex;
+  align-items:center;
+  gap:1rem;
+}
+.chat-header .back-button {
+  text-decoration:none;
+  color: var(--primary-color);
+}
+.chat-header h1 {
+  margin:0;
+  font-size:1.25rem;
+}
+
+/* Messages area */
+.chat-messages {
+  flex:1;
+  padding:1rem;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+}
+.message {
+  max-width:75%;
+  padding:1rem;
+  margin:0.5rem 0;
+  line-height:1.5;
+  word-break:break-word;
+  border-radius:1.2rem;
+  transition: all 0.3s ease;
+}
+.user-message {
+  background:var(--primary-color);
+  color:#fff;
+  align-self:flex-end;
+  border-radius:1.5rem 1.5rem 0.5rem 1.5rem;
+}
+.bot-message {
+  background:#fff;
+  color:var(--text-color);
+  align-self:flex-start;
+  border-radius:1.5rem 1.5rem 1.5rem 0.5rem;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Typing indicator */
+.typing-indicator {
+  display:none;
+  padding:1rem;
+  font-size:0.9rem;
+  color:var(--primary-color);
+  background:rgba(0,95,115,0.05);
+  margin:0 1rem 1rem;
+  border-radius:0.5rem;
+}
+.dot-flashing {
+  display:inline-block;
+  width:8px; height:8px;
+  border-radius:50%;
+  background-color:var(--primary-color);
+  animation: dotFlashing 1s infinite linear;
+}
+@keyframes dotFlashing {
+  0%   { opacity:0.2; }
+  50%  { opacity:1; }
+  100% { opacity:0.2; }
+}
+
+/* Input area */
+.input-container {
+  border-top:1px solid #e0e0e0;
+  padding:0.5rem;
+  display:flex;
+  gap:0.5rem;
+}
+.input-container input {
+  flex:1;
+  padding:0.75rem;
+  border:1px solid #ccc;
+  border-radius:4px;
+  font-size:1rem;
+}
+.input-container button {
+  padding:0 1rem;
+  border:none;
+  background:var(--secondary-color);
+  color:#fff;
+  border-radius:4px;
+  cursor:pointer;
+  font-size:1rem;
+  transition: all 0.2s ease;
+}
+.input-container button:hover {
+  background: #0096b7;
+}
+
+/* Speech to text button */
+.mic-btn {
+  padding: 0.75rem;
+  border: none;
+  background: var(--accent-color);
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.mic-btn:hover {
+  background: #6ab1aa;
+  transform: scale(1.05);
+}
+.mic-btn.recording {
+  background: var(--recording-color);
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+.mic-indicator {
+  display: none;
+  font-size: 0.8rem;
+  color: var(--recording-color);
+  text-align: center;
+  margin: 0.5rem 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background: rgba(231, 76, 60, 0.1);
+}
+.mic-indicator.active {
+  display: block;
+}
+</style>
+</head>
+<body>
+  <div class="background-elements">
+    <div class="medical-icon" style="left:10%;top:20%;">
+      <!-- svg… -->
+    </div>
+    <div class="medical-icon" style="left:70%;top:60%;">
+      <!-- svg… -->
+    </div>
+    <div class="gradient-mesh"></div>
+    <div class="floating-particles"></div>
+  </div>
+
+  <div class="chat-container">
+    <div class="chat-header">
+      <a href="{% url 'index' %}" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Home
+      </a>
+      <h1>🩺 Medico Report Generator</h1>
+    </div>
+
+    <div class="chat-messages" id="chat-messages"></div>
+
+    <div class="typing-indicator" id="typing-indicator">
+      <span class="dot-flashing"></span> Generating response...
+    </div>
+
+    <div class="mic-indicator" id="mic-indicator">
+      <i class="fas fa-microphone"></i> Recording... Speak now
+    </div>
+
+    <div class="input-container">
+      <input type="text" id="user-input" placeholder="Describe your symptoms or ask a question…">
+      <button class="mic-btn" id="mic-button" title="Click to speak"><i class="fas fa-microphone"></i></button>
+      <button id="send-button">Send <i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <!-- CSRF token for Django -->
+  {% csrf_token %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(function() {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const chatMessages = $('#chat-messages');
+    const typingIndicator = $('#typing-indicator').hide();
+    const micIndicator = $('#mic-indicator');
+    const sendButton = $('#send-button');
+    const micButton = $('#mic-button');
+    const userInput = $('#user-input');
+
+    // Add a welcome message
+    addMessage("Hello! I'm your medical assistant. Please describe your symptoms or health concerns.", 'bot-message');
+
+    async function handleMessage() {
+        const message = userInput.val().trim();
+        if (!message) return;
+
+        addMessage(message, 'user-message');
+        userInput.val('');
+        typingIndicator.show();
+
+        try {
+            const response = await $.ajax({
+                url: "{% url 'reportgen' %}",
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrftoken },
+                data: { user_input: message }
+            });
+
+            // The report_gen view returns bot_response directly
+            if (response.status === 'success') {
+                addMessage(response.response, 'bot-message');
+            } else {
+                addMessage(`⚠️ ${response.response || 'Error processing request'}`, 'bot-message');
+            }
+        } catch (error) {
+            const errorMsg = error.responseJSON?.response || 'Error processing request';
+            addMessage(`⚠️ ${errorMsg}`, 'bot-message');
+        } finally {
+            typingIndicator.hide();
+            chatMessages.scrollTop(chatMessages[0].scrollHeight);
+        }
+    }
+
+    function addMessage(content, className) {
+        const messageDiv = $('<div>').addClass(`message ${className}`).text(content);
+        chatMessages.append(messageDiv);
+        chatMessages.scrollTop(chatMessages[0].scrollHeight);
+        // speak bot messages
+        if (className === 'bot-message') {
+            const utterance = new SpeechSynthesisUtterance(content);
+            speechSynthesis.speak(utterance);
+        }
+    }
+
+    sendButton.click(handleMessage);
+    userInput.keypress(function(e) {
+        if (e.which === 13) handleMessage();
+    });
+    
+    // Speech recognition variables
+    let mediaRecorder;
+    let audioChunks = [];
+    let isRecording = false;
+    
+    // Setup audio recording
+    async function setupAudioRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        
+        mediaRecorder.addEventListener('dataavailable', event => {
+          audioChunks.push(event.data);
+        });
+        
+        mediaRecorder.addEventListener('stop', () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+          sendAudioToServer(audioBlob);
+          audioChunks = [];
+          isRecording = false;
+          micButton.removeClass('recording');
+          micIndicator.removeClass('active');
+        });
+        
+        return true;
+      } catch (err) {
+        console.error('Error accessing microphone:', err);
+        addMessage("⚠️ Could not access your microphone. Please check your permissions or use text input instead.", 'bot-message');
+        return false;
+      }
+    }
+    
+    // Handle microphone button click
+    micButton.click(async function() {
+      if (isRecording) {
+        // Stop recording
+        mediaRecorder.stop();
+      } else {
+        // Start recording
+        if (!mediaRecorder && !(await setupAudioRecording())) {
+          return;
+        }
+        
+        isRecording = true;
+        micButton.addClass('recording');
+        micIndicator.addClass('active');
+        audioChunks = [];
+        mediaRecorder.start();
+        
+        // Auto-stop after 10 seconds
+        setTimeout(() => {
+          if (isRecording) {
+            mediaRecorder.stop();
+          }
+        }, 10000);
+      }
+    });
+    
+    // Send audio to server for speech-to-text conversion
+    function sendAudioToServer(audioBlob) {
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'recording.wav');
+      
+      typingIndicator.show();
+      
+      fetch('{% url "speech_to_text" %}', {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+        },
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        typingIndicator.hide();
+        if (data.text) {
+          userInput.val(data.text);
+          handleMessage(); // Automatically send the transcribed text
+        } else if (data.error) {
+          addMessage(`⚠️ Error with speech recognition: ${data.error}`, 'bot-message');
+        }
+      })
+      .catch(error => {
+        typingIndicator.hide();
+        console.error('Error with speech recognition:', error);
+        addMessage('⚠️ An error occurred during speech recognition. Please try again or use text input.', 'bot-message');
+      });
+    }
+    
+    // Check if browser supports speech recognition
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      micButton.hide();
+      console.log('Speech input is not supported in this browser.');
+    }
+});
+</script>
+</body>
+</html>

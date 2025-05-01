@@ -1,0 +1,323 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Medico - Register</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+  <style>
+    .mic-btn {
+      background: transparent;
+      border: none;
+      color: #6c757d;
+      cursor: pointer;
+      position: absolute;
+      right: 40px;
+      top: 5px;
+      z-index: 10;
+      transition: all 0.3s;
+    }
+    .mic-btn:hover {
+      color: #9b59b6;
+      transform: scale(1.1);
+    }
+    .mic-btn.recording {
+      color: #e74c3c;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-transparent">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-heartbeat mr-2"></i>Medico
+      </a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="login-card">
+      <div class="text-center mb-4">
+        <h2 class="mb-3">Register New User</h2>
+        <!-- <p class="text-muted">Create new system account</p> -->
+      </div>
+      
+      {% if messages %}
+      <div class="alert-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="uid">Unique ID</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-id-badge"></i></span>
+            </div>
+            <input type="text" 
+                   class="form-control" 
+                   id="uid" 
+                   name="uid" 
+                   placeholder="Create UID (6-20 alphanumeric)"
+                   pattern="[A-Za-z0-9]{6,20}"
+                   title="6-20 alphanumeric characters"
+                   required>
+            <button type="button" class="mic-btn" data-target="uid"><i class="fas fa-microphone"></i></button>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+            </div>
+            <input type="password" 
+                   class="form-control" 
+                   id="password" 
+                   name="password" 
+                   placeholder="Create password (8-20 characters)"
+                   minlength="8"
+                   maxlength="20"
+                   required>
+            <button type="button" class="mic-btn" data-target="password"><i class="fas fa-microphone"></i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="full_name">Full Name</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+            </div>
+            <input type="text" 
+                  class="form-control" 
+                  id="full_name" 
+                  name="full_name" 
+                  placeholder="Enter your full name"
+                  required>
+            <button type="button" class="mic-btn" data-target="full_name"><i class="fas fa-microphone"></i></button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="age">Age</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+            </div>
+            <input type="number" 
+                  class="form-control" 
+                  id="age" 
+                  name="age" 
+                  placeholder="Enter your age"
+                  min="1" 
+                  max="120"
+                  required>
+            <button type="button" class="mic-btn" data-target="age"><i class="fas fa-microphone"></i></button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+            </div>
+            <input type="email" 
+                  class="form-control" 
+                  id="email" 
+                  name="email" 
+                  placeholder="Enter your email"
+                  required>
+            <button type="button" class="mic-btn" data-target="email"><i class="fas fa-microphone"></i></button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-phone"></i></span>
+            </div>
+            <input type="tel" 
+                  class="form-control" 
+                  id="phone" 
+                  name="phone" 
+                  placeholder="Enter your phone number"
+                  pattern="[0-9]{10}"
+                  title="10-digit phone number"
+                  required>
+            <button type="button" class="mic-btn" data-target="phone"><i class="fas fa-microphone"></i></button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Address</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+            </div>
+            <textarea class="form-control" 
+                      id="address" 
+                      name="address" 
+                      placeholder="Enter your full address"
+                      rows="2"
+                      required></textarea>
+            <button type="button" class="mic-btn" data-target="address" style="top: 15px;"><i class="fas fa-microphone"></i></button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Register</button>
+        <p class="text-center mt-4">Already have an account? <a href="{% url 'login' %}" class="text-primary">Login Here</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+      document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+      document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+
+      const uid = document.getElementById('uid');
+      const password = document.getElementById('password');
+      const fullName = document.getElementById('full_name');
+      const age = document.getElementById('age');
+      const email = document.getElementById('email');
+      const phone = document.getElementById('phone');
+      const address = document.getElementById('address');
+      
+      let isValid = true;
+
+      if(!/^[A-Za-z0-9]{6,20}$/.test(uid.value)) {
+          isValid = false;
+          uid.classList.add('is-invalid');
+          showError(uid, 'UID must be 6-20 alphanumeric characters');
+      }
+
+      if(password.value.length < 8 || password.value.length > 20) {
+          isValid = false;
+          password.classList.add('is-invalid');
+          showError(password, 'Password must be 8-20 characters');
+      }
+
+      if(fullName.value.trim() === '') {
+          isValid = false;
+          fullName.classList.add('is-invalid');
+          showError(fullName, 'Full name is required');
+      }
+
+      if(age.value < 1 || age.value > 120) {
+          isValid = false;
+          age.classList.add('is-invalid');
+          showError(age, 'Please enter a valid age (1-120)');
+      }
+
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+          isValid = false;
+          email.classList.add('is-invalid');
+          showError(email, 'Please enter a valid email address');
+      }
+
+      if(!/^\d{10}$/.test(phone.value)) {
+          isValid = false;
+          phone.classList.add('is-invalid');
+          showError(phone, 'Please enter a 10-digit phone number');
+      }
+
+      if(address.value.trim() === '') {
+          isValid = false;
+          address.classList.add('is-invalid');
+          showError(address, 'Address is required');
+      }
+
+      if(!isValid) {
+          e.preventDefault();
+      }
+  });
+    function showError(input, message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'invalid-feedback';
+        errorDiv.textContent = message;
+        input.parentElement.parentElement.appendChild(errorDiv);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      
+      if (!SpeechRecognition) {
+        document.querySelectorAll('.mic-btn').forEach(btn => btn.style.display = 'none');
+        console.log('Speech recognition not supported in this browser');
+        return;
+      }
+      
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+      
+      let currentInputTarget = null;
+      
+      document.querySelectorAll('.mic-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          currentInputTarget = document.getElementById(targetId);
+          
+          this.classList.add('recording');
+          recognition.start();
+        });
+      });
+      
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        if (currentInputTarget) {
+          if (currentInputTarget.id === 'age') {
+            const ageMatch = transcript.match(/\d+/);
+            if (ageMatch) {
+              currentInputTarget.value = ageMatch[0];
+            }
+          } else if (currentInputTarget.id === 'phone') {
+            const phoneMatch = transcript.replace(/\D/g, '');
+            currentInputTarget.value = phoneMatch;
+          } else {
+            currentInputTarget.value = transcript;
+          }
+        }
+      };
+      
+      recognition.onend = function() {
+        document.querySelectorAll('.mic-btn').forEach(btn => {
+          btn.classList.remove('recording');
+        });
+      };
+      
+      recognition.onerror = function(event) {
+        console.error('Speech recognition error:', event.error);
+        document.querySelectorAll('.mic-btn').forEach(btn => {
+          btn.classList.remove('recording');
+        });
+      };
+    });
+  </script>
+</body>
+</html>

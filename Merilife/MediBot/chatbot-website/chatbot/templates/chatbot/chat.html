@@ -1,0 +1,155 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Doctor Bot</title>
+    <link rel="stylesheet" href="{% static 'chatbot/css/styles.css' %}">
+    <style>
+        .input-container {
+            display: flex;
+            margin-top: 10px;
+        }
+        .input-container input {
+            flex: 1;
+        }
+        .mic-btn {
+            background: transparent;
+            border: none;
+            color: #555;
+            cursor: pointer;
+            padding: 0 10px;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+        .mic-btn:hover {
+            color: #007bff;
+            transform: scale(1.1);
+        }
+        .mic-btn.recording {
+            color: #e74c3c;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        .mic-indicator {
+            display: none;
+            color: #e74c3c;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 5px;
+        }
+        .mic-indicator.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Welcome to the Doctor Chatbot</h1>
+        <div id="chat-box" class="chat-box">
+            <!-- Chat messages will be dynamically inserted here -->
+        </div>
+        <div class="mic-indicator" id="mic-indicator">Recording... Speak now</div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Type your message here..." />
+            <button class="mic-btn" id="mic-btn" title="Click to speak"><i class="fas fa-microphone"></i></button>
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatBox = document.getElementById('chat-box');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+            const micButton = document.getElementById('mic-btn');
+            const micIndicator = document.getElementById('mic-indicator');
+
+            // Function to add a message to the chat and speak it if it's a bot message
+            function addMessage(text, isUser) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = isUser ? 'user-message' : 'bot-message';
+                messageDiv.textContent = text;
+                chatBox.appendChild(messageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Speak bot message aloud
+                if (!isUser && 'speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    speechSynthesis.speak(utterance);
+                }
+            }
+
+            // Function to send message
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (!message) return;
+
+                addMessage(message, true);
+                userInput.value = '';
+
+                // Simulated bot response (replace this with your real API call)
+                setTimeout(() => {
+                    const response = 'Thank you for your message. A doctor will review it soon.';
+                    addMessage(response, false);
+                }, 1000);
+            }
+
+            // Event listeners for sending messages
+            sendButton.addEventListener('click', sendMessage);
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // Speech recognition setup
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+
+                micButton.addEventListener('click', function() {
+                    if (micButton.classList.contains('recording')) {
+                        recognition.stop();
+                    } else {
+                        micButton.classList.add('recording');
+                        micIndicator.classList.add('active');
+                        recognition.start();
+                    }
+                });
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    userInput.value = transcript;
+                };
+
+                recognition.onend = function() {
+                    micButton.classList.remove('recording');
+                    micIndicator.classList.remove('active');
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    micButton.classList.remove('recording');
+                    micIndicator.classList.remove('active');
+                };
+            } else {
+                micButton.style.display = 'none';
+                console.log('Speech recognition not supported in this browser');
+            }
+        });
+    </script>
+</body>
+</html>

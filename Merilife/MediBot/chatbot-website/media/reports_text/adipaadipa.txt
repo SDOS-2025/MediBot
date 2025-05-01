@@ -1,0 +1,180 @@
+Q1: cold
+Q2: 5 days
+Q3: no
+Q1: cold
+Q2: 2 days
+Q3: no
+Q4: no
+Q5: yes
+Q1: cold
+Q2: 2 days
+Q3: no
+Q1: cold
+Q2: 2 days
+Q3: no
+Q4: fever
+Q5: no
+=== 2025-05-01 02:11:42 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presented with a complaint of a cold, of two days duration.  Initially, the primary symptom was a cold.  A follow-up reported the development of a fever.  No other significant symptoms were reported in subsequent follow-ups.
+
+
+**2. Medications:**
+
+None reported.
+
+
+**3. Allergies:**
+
+None reported.
+Diagnosis: **Preliminary Diagnosis:**  Upper Respiratory Infection (URI)
+
+
+**Note:** This is a preliminary diagnosis based on limited information. Further evaluation, including physical examination and potentially laboratory testing, may be necessary to confirm the diagnosis and rule out other potential causes.
+Q1: fever
+Q2: 2 days
+Q3: bo
+Q4: no
+Q5: no
+=== 2025-05-01 02:27:28 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a two-day history of fever.  No other specific symptoms were reported.
+
+
+**2. Medications:**
+
+None reported.
+
+
+**3. Allergies:**
+
+None reported.
+Diagnosis: **Preliminary Diagnosis:**
+
+Febrile illness.  Further investigation is required to determine the underlying cause.
+Q1: thanks
+Q1: Error processing audio. Please try again or type your response.
+Q2: Error processing audio. Please try again or type your response.
+Q1: cold
+Q1: fever
+Q2: 3 days
+Q3: nope
+Q4: vomit and urge to do sex
+Q5: happy
+=== 2025-05-01 15:56:40 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presented with a three-day history of fever.  Follow-up information revealed an episode of vomiting and an expressed urge to engage in sexual activity.  A subsequent follow-up noted the patient reported feeling "happy."  The significance of these latter two observations requires further investigation and clarification.
+
+
+**2. Medications:**
+
+None reported.
+
+
+**3. Allergies:**
+
+None reported.
+Diagnosis: **Preliminary Diagnosis:**  Viral infection (Influenza or other viral etiology) is suspected given the fever and vomiting.  However, the reported urge to engage in sexual activity and subsequent report of happiness warrant further investigation to rule out other potential causes, including but not limited to hormonal imbalances, psychiatric conditions, or drug-induced effects.  Further history, physical examination, and possibly laboratory testing are necessary to establish a definitive diagnosis.
+Q1: gvbfb
+Q1: fever
+Q2: two days
+Q3: a very strong asthma
+Q4: I don't use inhaler but I use condom specialised dotted
+Q5: Nahin main Kuchh use nahin kar raha bus so raha hun
+=== 2025-05-01 18:56:07 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a fever of two days duration.  The patient's description of their symptoms is limited.  Further clarification is needed regarding the severity and characteristics of the fever (e.g., temperature, chills, sweats).
+
+
+**2. Medications:**
+
+The patient denies current medication use.  However, the patient initially reported using a "condom specialized dotted," which requires further clarification to determine if this is a misunderstanding or refers to a medication delivery method.  The patient later denied using any medication.
+
+
+**3. Allergies:**
+
+No known allergies are reported.
+Diagnosis: **Preliminary Diagnosis:**
+
+Fever of unknown origin.  Further investigation is required to determine the etiology of the fever.  The patient's statement regarding asthma requires further exploration and clarification of their asthma management plan, including the reason for not using an inhaler as prescribed, if applicable.  The statement about a "condom specialized dotted" needs clarification to rule out any potential medication misuse or misunderstanding.  A complete physical examination and potentially laboratory tests (e.g., complete blood count, blood cultures) are indicated.
+Q1: Telugu
+Q2: mood rojulu
+Q3: asthma Undi
+Q4: Aqua
+Q5: Aqua
+=== 2025-05-01 18:57:10 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient reports experiencing symptoms described as "Telugu" (language barrier prevents precise symptom clarification).  The duration of these symptoms is stated as "mood rojulu" which translates roughly to "several days" in Telugu.  Further clarification regarding the nature and specifics of the symptoms is required.
+
+**2. Medications:**
+
+The patient is currently taking "Aqua" (the nature and dosage of this medication require further clarification).  This was noted in two follow-up visits.
+
+**3. Allergies:**
+
+No known allergies were reported, however, a thorough allergy assessment is recommended given the lack of detailed information.
+Diagnosis: **Preliminary Diagnosis:**  Unable to provide a preliminary diagnosis due to insufficient information regarding the patient's symptoms.  Further investigation and clarification of the patient's reported symptoms (Telugu), medication ("Aqua"), and a complete allergy assessment are necessary for accurate diagnosis and treatment planning.  A translator may be required for effective communication.
+Q1: mujhe bahut jyada khansi hai aur Mere Sar Mein Dard Hai
+Q2: aaj jyada Kuchh Nahin bus 10-15 Din Hue Hain
+Q3: Nahin Aisa Kuchh To Nahin Hai
+Q4: han matlab thoda bahut Bukhar To Hai 104 degree ka
+Q5: han matlab chest Mein pen to Hai covid Jaisa lag raha hai
+=== 2025-05-01 19:00:16 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient reports experiencing a severe cough (mujhe bahut jyada khansi hai) and headache (Mere Sar Mein Dard Hai) for approximately 10-15 days.  Initially, the patient denied any other symptoms. However, upon further questioning, the patient admitted to experiencing fever (Bukhar) of 104 degrees Fahrenheit.  The patient also reports chest pain (chest Mein pen) and suspects it may be related to COVID-19 (covid Jaisa lag raha hai).
+
+
+**2. Medications:**
+
+None reported.
+
+
+**3. Allergies:**
+
+None reported.
+Diagnosis: **Preliminary Diagnosis:**  Suspected Influenza or COVID-19 infection.  Further investigation including a physical examination, vital signs assessment, and diagnostic testing (e.g., rapid antigen test, PCR test, chest X-ray) are necessary to confirm the diagnosis and rule out other potential causes of the patient's symptoms.  The high fever warrants immediate attention.
+Q1: j'ai de la fièvre et de la toux
+Q2: 2 jours
+Q3: non
+Q4: non
+Q5: non
+=== 2025-05-01 23:32:06 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient reports a two-day history of fever and cough.  The patient's description of symptoms, translated from French, indicates "j'ai de la fièvre et de la toux," signifying fever and cough.  No further details regarding the character of the cough (e.g., productive or non-productive, dry or wet) or the severity of the fever (e.g., temperature) were provided.
+
+**2. Medications:**
+
+None reported.
+
+**3. Allergies:**
+
+None reported.
+Diagnosis: **Preliminary Diagnosis:**  Acute respiratory infection.  Further investigation is required to determine the specific etiology (e.g., viral, bacterial, or other).  This diagnosis is preliminary and requires further clinical evaluation, including physical examination and potentially laboratory testing.
