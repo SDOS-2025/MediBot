@@ -13,10 +13,11 @@ class AITests(TestCase):
     @patch('chatbot.ai_wrapper.GENAI_CLIENT_WORKING', True)
     @patch('chatbot.ai_wrapper.client')
     def test_genai_integration(self, mock_client):
+        mock_chat = MagicMock()
         mock_response = MagicMock()
         mock_response.text = 'Mocked AI response'
-        mock_client.chats.create.return_value = mock_response  # Fix mock chain
-        
+        mock_chat.send_message.return_value = mock_response
+        mock_client.chats.create.return_value = mock_chat
         response = send_chat_message('test message')
         self.assertEqual(response, 'Mocked AI response')
 

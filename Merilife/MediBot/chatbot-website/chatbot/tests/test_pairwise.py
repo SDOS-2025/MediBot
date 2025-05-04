@@ -12,7 +12,6 @@ class PairwiseAuthTests(TestCase):
             password='valid_pass',
             full_name='Test User',
             email='test@example.com',
-            # ADD REQUIRED FIELDS
             phone='1234567890',
             age=30,
             address='Test Address'
@@ -40,4 +39,4 @@ class PairwiseAuthTests(TestCase):
                 if uid == 'valid_user' and pwd == 'valid_pass':
                     self.assertRedirects(response, reverse('index'))
                 else:
-                    self.assertContains(response, 'Invalid credentials')
+                    self.assertContains(response, 'Invalid UID or password')  # Adjusted error message

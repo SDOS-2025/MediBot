@@ -21,7 +21,8 @@ class UserFactory(factory.django.DjangoModelFactory):
     password = factory.PostGenerationMethodCall('set_password', 'testpass123')
     full_name = factory.Faker('name')
     email = factory.Faker('email')
-    phone = factory.Faker('phone_number')
+    # phone = factory.Faker('phone_number')
+    phone = factory.Faker('numerify', text='##########') 
     age = factory.Faker('random_int', min=18, max=90)
     address = factory.Faker('address')
 

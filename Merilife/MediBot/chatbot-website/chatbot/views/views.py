@@ -217,6 +217,7 @@ def chat(request):
 
 def generate_pdf(request):
     # Only patients generate PDFs
+    print(request)
     if not request.user.is_authenticated or hasattr(request.user, 'doctor_profile') or request.user.is_superuser:
         messages.error(request, 'Only patients can generate reports.')
         return redirect('login')
