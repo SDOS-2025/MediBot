@@ -178,3 +178,49 @@ None reported.
 
 None reported.
 Diagnosis: **Preliminary Diagnosis:**  Acute respiratory infection.  Further investigation is required to determine the specific etiology (e.g., viral, bacterial, or other).  This diagnosis is preliminary and requires further clinical evaluation, including physical examination and potentially laboratory testing.
+Q1: hi I am having fever
+Q2: two weeks
+Q3: no no
+Q4: gold
+Q5: I experienced cold
+=== 2025-05-04 02:05:47 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient reports a two-week history of fever.  The onset of symptoms began approximately two weeks prior to this visit.  Follow-up information indicates a previous cold-like illness.  Further details regarding the character of the fever (e.g., intermittent, continuous, spiking), associated symptoms (e.g., chills, sweats, myalgias, cough, sore throat, headache, gastrointestinal symptoms), and severity are needed for a complete assessment.
+
+
+**2. Medications:**
+
+None reported.
+
+
+**3. Allergies:**
+
+None reported.
+Diagnosis: **Preliminary Diagnosis:**  Further investigation is required to establish a definitive diagnosis.  Possible diagnoses include, but are not limited to, viral infection (e.g., influenza, other viral syndromes), bacterial infection, or other underlying medical condition.  Additional history, physical examination, and potentially laboratory testing (e.g., complete blood count, blood cultures, influenza testing) are necessary to determine the etiology of the fever.
+Q1: cold
+Q2: 2 days
+Q3: no
+Q4: no
+Q5: no
+=== 2025-05-04 03:16:27 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a two-day history of cold symptoms.  No further specifics regarding symptom severity (e.g., cough, congestion, fever, sore throat) were provided.
+
+
+**2. Medications:**
+
+None reported.
+
+
+**3. Allergies:**
+
+None reported.
+Diagnosis: **Preliminary Diagnosis:**  Upper Respiratory Infection (URI) -  This is a preliminary diagnosis based on limited information.  Further evaluation is necessary to confirm the diagnosis and rule out other potential causes.  A more detailed symptom assessment is required.

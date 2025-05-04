@@ -1,3 +1,6 @@
 /venv
-/media/deepspeech_models/deepspeech-0.9.3-models.pbmm
-/media/deepspeech_models/deepspeech-0.9.3-models.scorer
+/media/*
+!/media/test/.gitkeep
+.pytest_cache/
+.coverage
+htmlcov/

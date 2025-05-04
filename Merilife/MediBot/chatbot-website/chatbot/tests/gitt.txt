@@ -1,0 +1,7 @@
+# .github/workflows/tests.yml
+- name: Calculate MTTF
+  run: |
+    FAILURES=$(grep -c 'FAILED' test_results.log)
+    TOTAL_RUNS=$(( $(date +%s) - START_TIMESTAMP ))
+    MTTF=$(( TOTAL_RUNS / (FAILURES + 1) ))
+    echo "MTTF=${MTTF}s" >> $GITHUB_ENV

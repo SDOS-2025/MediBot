@@ -280,7 +280,6 @@ from django.http import JsonResponse
 from chatbot.utils import generate_response  # Import your AI model function
 
 def reportgen(request):
-    print("SEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     if request.method == 'POST':
         if not request.user.is_authenticated or hasattr(request.user, 'doctor_profile') or request.user.is_superuser:
             return JsonResponse({'status': 'error', 'response': 'Unauthorized'}, status=403)

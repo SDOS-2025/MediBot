@@ -1,0 +1,7 @@
+[run]
+source =
+    chatbot/
+    reports/
+omit =
+    */migrations/*
+    */tests/*

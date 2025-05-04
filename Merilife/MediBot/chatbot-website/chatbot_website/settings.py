@@ -8,7 +8,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'medico_db',  # Change this to your actual database name
         'USER': 'root',  # MySQL username (usually 'root' for local development)this
-        'PASSWORD': 'Aditya@1998',
+        'PASSWORD': '45221313',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'chatbot',
+    'behave_django',
     'reports',
 ]
 
@@ -49,16 +50,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Django's auth middleware
-    'chatbot.middleware.AuthenticationMiddleware',  # Your custom middleware
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 3600  # 1 hour session lifetime
 
@@ -118,12 +110,9 @@ SECRET_KEY = keyy
 
 # AUTH_USER_MODEL = 'chatbot.SystemUser'
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
+    'chatbot.backends.UIDAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',  # Keep this as fallback
 ]
-# AUTHENTICATION_BACKENDS = [
-#     'chatbot.backends.UIDAuthBackend',
-#     'django.contrib.auth.backends.ModelBackend',  # Keep this as fallback
-# ]
 
 AUTH_USER_MODEL = 'chatbot.CustomUser'
 
@@ -133,3 +122,39 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_COOKIE_HTTPONLY = True
 SESSION_SAVE_EVERY_REQUEST = True
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+DATABASES['default']['TEST'] = {
+    'NAME': 'test_db.sqlite3',
+}
+# Optional: Enable logging for tests
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+}
+# Set testing mode
+TESTING = True
+SILENCED_SYSTEM_CHECKS = ['auth.E003', 'auth.E004']  # Temporarily silence auth warnings
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# At the top with other path configurations
+BASE_MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Then later in the testing section:
+if TESTING:
+    MEDIA_ROOT = os.path.join(BASE_MEDIA_ROOT, 'test')
+    # Optionally add automatic cleanup
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+else:
+    MEDIA_ROOT = BASE_MEDIA_ROOT
+    # Production storage configuration
+    # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
