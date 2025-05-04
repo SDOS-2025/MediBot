@@ -3,12 +3,17 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load Manager Configuration
+LOAD_MANAGER_MAX_CONNECTIONS = 100
+LOAD_MANAGER_ENABLED = True
+LOAD_MANAGER_TIMEOUT = 30  # seconds
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'medico_db',  # Change this to your actual database name
         'USER': 'root',  # MySQL username (usually 'root' for local development)this
-        'PASSWORD': '45221313',
+        'PASSWORD': 'harsh0604',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -36,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'chatbot',
+    'chatbot_website',
     'behave_django',
     'reports',
 ]
@@ -46,19 +52,21 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',  # Move this BEFORE your custom middleware
+    'chatbot_website.load_middleware.LoadManagerMiddleware',  # Add load manager middleware
     'chatbot.middleware.AuthenticationMiddleware',  # Your custom middleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_AGE = 3600  # 1 hour session lifetime
+SESSION_COOKIE_AGE = 1209600  # 2 weeks
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 ROOT_URLCONF = 'chatbot_website.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'chatbot_website/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,6 +75,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'load_tags': 'chatbot_website.templatetags.load_tags',
+            },
         },
     },
 ]
