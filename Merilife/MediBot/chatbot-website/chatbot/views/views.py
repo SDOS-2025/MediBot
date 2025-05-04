@@ -141,39 +141,57 @@ def register_doctor(request):
     return render(request, 'chatbot/register_doctor.html')
 @login_required
 def doctor_dashboard(request):
+    doctor_profile = getattr(request.user, 'doctor_profile', None)
+    if not doctor_profile:
+        return redirect('login')
+     # Get doctor's actual specialization from their profile
+    doctor_specialization = doctor_profile.specialization
+    # Treatments must match both doctor AND reqd=their specialization
+    open_treatments = Treatment.objects.filter(
+        doctor=request.user,
+        is_closed=False,
+        reqd=doctor_specialization  # Critical filter
+    )
     # Ensure only doctors can access this view
     if not hasattr(request.user, 'doctor_profile'):
         messages.error(request, 'Access denied')
         return redirect('login')
 
-    # Fetch open and closed treatments assigned to the logged-in doctor
+    # Only show treatments with required specialization matching the doctor's specialization
+    doctor_specialization = request.user.doctor_profile.specialization
     open_treatments = Treatment.objects.filter(
-        doctor=request.user, 
-        is_closed=False
+        doctor=request.user,
+        is_closed=False,
+        reqd=doctor_specialization
     ).select_related('patient').prefetch_related('treatment_reports')
 
     closed_treatments = Treatment.objects.filter(
-        doctor=request.user, 
-        is_closed=True
+        doctor=request.user,
+        is_closed=True,
+        reqd=doctor_specialization
     ).select_related('patient').prefetch_related('treatment_reports')
-    
+
     # Get statistics
     today_appointments = Treatment.objects.filter(
         doctor=request.user,
-        created_at__date=now().date()
+        created_at__date=now().date(),
+        reqd=doctor_specialization
     ).count()
-    
+
     total_patients = Treatment.objects.filter(
-        doctor=request.user
+        doctor=request.user,
+        reqd=doctor_specialization
     ).values('patient').distinct().count()
-    
+
     total_reports = Report.objects.filter(
-        treatment__doctor=request.user
+        treatment__doctor=request.user,
+        treatment__reqd=doctor_specialization
     ).count()
-    
+
     pending_reviews = Treatment.objects.filter(
         doctor=request.user,
-        is_closed=False
+        is_closed=False,
+        reqd=doctor_specialization
     ).count()
 
     context = {
@@ -184,7 +202,8 @@ def doctor_dashboard(request):
         'total_reports': total_reports,
         'pending_reviews': pending_reviews,
         'recent_reports': Report.objects.filter(
-            treatment__doctor=request.user
+            treatment__doctor=request.user,
+            treatment__reqd=doctor_specialization
         ).select_related('user', 'treatment').order_by('-created_at')[:5]
     }
     return render(request, 'chatbot/doctor_dashboard.html', context)
@@ -201,8 +220,10 @@ def close_treatment(request, treatment_id):
 
 @login_required
 def view_treatment_history(request, treatment_id):
-    # Only assigned doctor can view the history
+    # Only assigned doctor with matching specialization can view the history
     treatment = get_object_or_404(Treatment, id=treatment_id, doctor=request.user)
+    if treatment.reqd != request.user.doctor_profile.specialization:
+        return HttpResponse('Unauthorized: Specialization mismatch', status=403)
     # Build file path
     history_file = os.path.join(settings.MEDIA_ROOT, 'reports_text', f"{treatment.patient.uid}.txt")
     if not os.path.exists(history_file):
@@ -349,26 +370,82 @@ genai.configure(api_key="AIzaSyB0R26JpwnrxR1iHP7SRdlXImYhG2NAYLQ")
 # Create client instances for different purposes
 med_chat_model = genai.GenerativeModel('gemini-2.0-flash')
 report_model = genai.GenerativeModel('gemini-2.0-flash')
-system_instruction = (
-    "You are a medical assistant chatbot. Follow this EXACT process:"
-    "\n1. Ask the patient: 'What are your main symptoms?'"
-    "\n2. Ask the patient: 'How long have you been experiencing these symptoms?'"
-    "\n3. Ask the patient: 'Do you have any previous medical conditions?'"
-    "\n4. Based on all previous answers, ask ONE relevant follow-up question."
-    "\n5. Based on all previous answers, ask ONE final relevant follow-up question."
-    "\nAfter collecting all answers, generate a medical report with sections for History of Present Illness, "
-    "Medications, and Allergies. Then include the delimiter '###1234###' on a new line, followed by your preliminary diagnosis."
-    "\nDo NOT ask multiple questions at once. Ask EXACTLY ONE question at a time and wait for the answer."
-    "First old prompt is giiven to u if user has that will be used to generate the report. in complete info explasin that too like earlier issues and then add full info of the user and then ask the question. "
-)
+# system_instruction = (
+#     "You are a medical assistant chatbot. Follow this EXACT process:"
+#     "\n1. Ask the patient: 'What are your main symptoms?'"
+#     "\n2. Ask the patient: 'How long have you been experiencing these symptoms?'"
+#     "\n3. Ask the patient: 'Do you have any previous medical conditions?'"
+#     "\n4. Based on all previous answers, ask ONE relevant follow-up question."
+#     "\n5. Based on all previous answers, ask ONE final relevant follow-up question."
+#     "\nAfter collecting all answers, generate a medical report with sections for History of Present Illness, "
+#     "Medications, and Allergies. Then include the delimiter '###1234###' on a new line, followed by your preliminary diagnosis."
+#     "\nDo NOT ask multiple questions at once. Ask EXACTLY ONE question at a time and wait for the answer."
+#     "First old prompt is giiven to u if user has that will be used to generate the report. in complete info explasin that too like earlier issues and then add full info of the user and then ask the question. "
+# )
+
 fixed_questions = [
     "What are your main symptoms?",
     "How long have you been experiencing these symptoms?",
     "Do you have any previous medical conditions?"
 ]# Decorator to exempt CSRF for simplicity
+
+
+TRANSLATED_QUESTIONS = {
+    'en-US': [
+        "What are your main symptoms?",
+        "How long have you been experiencing these symptoms?",
+        "Do you have any previous medical conditions?"
+    ],
+    'hi-IN': [
+        "आपके मुख्य लक्षण क्या हैं?",
+        "आपको ये लक्षण कितने समय से हैं?",
+        "क्या आपको कोई पूर्व चिकित्सीय स्थितियां हैं?"
+    ],
+    'es-ES': [
+        "¿Cuáles son sus síntomas principales?",
+        "¿Cuánto tiempo ha estado experimentando estos síntomas?",
+        "¿Tiene alguna condición médica previa?"
+    ],
+    'fr-FR': [
+        "Quels sont vos principaux symptômes?",
+        "Depuis combien de temps avez-vous ces symptômes?",
+        "Avez-vous des antécédents médicaux?"
+    ]
+}
+
+LANGUAGE_MAP = {
+    'en-US': 'English',
+    'hi-IN': 'Hindi',
+    'es-ES': 'Spanish',
+    'fr-FR': 'French'
+}
+
 @csrf_exempt
 def medical_chat(request):
-    # Prepare per-user history file
+    # Get selected language
+    selected_lang = request.POST.get('language', request.GET.get('language', 'en-US'))
+    lang_name = LANGUAGE_MAP.get(selected_lang, 'English')
+    fixed_questions = TRANSLATED_QUESTIONS.get(selected_lang, TRANSLATED_QUESTIONS['en-US'])
+    
+    # Store language in session
+    request.session['selected_lang'] = selected_lang
+    
+    # System instruction with language context
+    system_instruction = (
+        f"You are a {lang_name}-speaking medical assistant. Follow these rules:\n"
+        "1. Ask questions ONLY in {lang_name}\n"
+        "2. Never repeat questions\n"
+        "3. Understand inputs in ANY language\n"
+        "4. Progress through: symptoms -> duration -> history -> follow-ups\n"
+        "5. Make questions distinct and clinically relevant\n\n"
+        "Process:\n"
+        "1-3: Fixed questions\n4-7: Unique follow-ups\n"
+        "After 7 answers, generate report with diagnosis after ###1234###"
+    ).format(lang_name=lang_name)
+    med_chat_model = genai.GenerativeModel(
+        'gemini-1.5-flash',
+        system_instruction=system_instruction  # Add this line
+    )
     history_dir = os.path.join(settings.MEDIA_ROOT, 'reports_text')
     os.makedirs(history_dir, exist_ok=True)
     history_file = os.path.join(history_dir, f"{request.user.uid}.txt")
@@ -393,12 +470,12 @@ def medical_chat(request):
         if q_idx < len(fixed_questions):
             question = fixed_questions[q_idx]
         elif q_idx < len(fixed_questions) + 4:  # Up to 4 follow-up questions
-            question = _generate_followup(session['answers'])
+            question = _generate_followup(session['answers'],request)
             
             # Check if this question is too similar to previously asked questions
             if question in session.get('asked_questions', []):
                 # Try one more time with a stronger instruction
-                question = _generate_followup(session['answers'] + ["Please ask about something different"])
+                question = _generate_followup(session['answers'] + ["Please ask about something different"],request)
         else:
             question = "All questions answered. Please submit your answers to generate the report."
             
@@ -439,12 +516,12 @@ def medical_chat(request):
         return JsonResponse({'status': 'question', 'question': next_q})
     # Four dynamic follow-ups
     elif q_idx < len(fixed_questions) + 4:
-        next_q = _generate_followup(session['answers'])
+        next_q = _generate_followup(session['answers'],request)
         
         # Check if this question is too similar to previously asked questions
         if next_q in session.get('asked_questions', []):
             # Try one more time with a stronger instruction
-            next_q = _generate_followup(session['answers'] + ["Please ask about something different"])
+            next_q = _generate_followup(session['answers'] + ["Please ask about something different"],request)
             
         # Add to asked questions
         if 'asked_questions' not in session:
@@ -457,11 +534,47 @@ def medical_chat(request):
     # All 7 questions done, generate report
     else:
         full_history = _compile_history(session['initial_prompt'], session['answers'], session.get('asked_questions', []))
-        report, diagnosis = _generate_report(full_history)
+        report, diagnosis, specialization = _generate_report(full_history, request)  # Changed here
         # Write report & diagnosis to file
+
+        # After generating report, diagnosis, specialization = _generate_report(...)
+        # Get doctors with the recommended specialization
+        doctors = CustomUser.objects.filter(
+            doctor_profile__specialization=specialization,
+            doctor_profile__isnull=False  # Ensure they have a doctor profile
+        )
+
+        # Fallback logic if no specialists found
+        if not doctors.exists():
+            doctors = CustomUser.objects.filter(
+                doctor_profile__specialization='General Medicine',
+                doctor_profile__isnull=False
+            )
+
+        # Final fallback (assign any available doctor)
+        if not doctors.exists():
+            doctors = CustomUser.objects.filter(doctor_profile__isnull=False)
+
+        # Assign random doctor from filtered list
+        assigned = random.choice(list(doctors)) if doctors.exists() else None
+
+        if assigned:
+            Treatment.objects.create(
+                patient=request.user,
+                doctor=assigned,
+                reqd=specialization,  # Set to AI-recommended specialization
+                is_closed=False
+            )
+        else:
+            # Handle error (no doctors available)
+            pass
+
+
+
+
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with open(history_file, 'a', encoding='utf-8') as f:
-            f.write(f"=== {timestamp} ===\nReport:\n{report}\nDiagnosis: {diagnosis}\n")
+            f.write(f"=== {timestamp} ===\nReport:\n{report}\nDiagnosis: {diagnosis}\nRecommended Specialization: {specialization}\n")  # Changed here
         # Create treatment entry
         doctors = CustomUser.objects.filter(doctor_profile__isnull=False)
         if doctors:
@@ -474,66 +587,67 @@ def medical_chat(request):
             )
         # Clear session
         request.session.pop('chat_session', None)
-        return JsonResponse({'status': 'complete', 'report': report, 'diagnosis': diagnosis})
+        return JsonResponse({'status': 'complete', 'report': report, 'diagnosis': diagnosis, 'specialization': specialization})
 
-def _generate_followup(answers):
-    """
-    Use GenAI to generate a single follow-up question based on previous answers.
-    """
-    # Get the fixed questions that were asked
-    questions_asked = fixed_questions[:min(len(answers), len(fixed_questions))]
+# Modified _generate_followup function
+def _generate_followup(answers, request):
+    selected_lang = request.session.get('selected_lang', 'en-US')
+    lang_name = LANGUAGE_MAP.get(selected_lang, 'English')
+    session = request.session.get('chat_session', {})
     
-    # Add any follow-up questions that were already asked (if we have more answers than fixed questions)
-    if len(answers) > len(fixed_questions):
-        # We store follow-up questions in the session, but we need to recreate them here
-        follow_up_count = len(answers) - len(fixed_questions)
-        questions_asked.extend([f"Follow-up question {i+1}" for i in range(follow_up_count)])
+    # Get previous questions and answers
+    asked_questions = session.get('asked_questions', [])
+    previous_qa = list(zip(asked_questions, answers))
     
-    # Create a formatted history of Q&A
-    qa_history = []
-    for i, (q, a) in enumerate(zip(questions_asked, answers)):
-        qa_history.append(f"Q{i+1}: {q}\nA{i+1}: {a}")
-    
-    # Create a list of topics to avoid based on what's already been discussed
-    topics_to_avoid = []
-    for q in questions_asked:
-        q_lower = q.lower()
-        if "symptom" in q_lower:
-            topics_to_avoid.append("symptoms")
-        if "medication" in q_lower or "medicine" in q_lower:
-            topics_to_avoid.append("medications")
-        if "allerg" in q_lower:
-            topics_to_avoid.append("allergies")
-        if "time" in q_lower or "how long" in q_lower or "when" in q_lower:
-            topics_to_avoid.append("timeline")
-        if "previous" in q_lower or "history" in q_lower or "past" in q_lower:
-            topics_to_avoid.append("medical history")
-    
-    avoid_txt = ", ".join(topics_to_avoid) if topics_to_avoid else "nothing specific"
+    # Build avoidance context
+    avoid_words = {
+        'en-US': ["already asked", "repeat", "same"],
+        'hi-IN': ["पहले पूछा", "दोहराएं", "वही"],
+        'es-ES': ["ya preguntado", "repetir", "mismo"],
+        'fr-FR': ["déjà demandé", "répéter", "même"]
+    }.get(selected_lang, [])
     
     prompt = (
-        "You are a medical assistant chatbot. "
-        "Conversation History:\n" + "\n\n".join(qa_history) + "\n\n"
-        f"Topics already covered that you should NOT ask about again: {avoid_txt}\n\n"
-        "Important Instructions:\n"
-        "1. DO NOT ask a question that is similar to any previously asked questions\n"
-        "2. DO NOT repeat questions about topics that have already been covered\n"
-        "3. Make your question specific and relevant to the patient's situation\n"
-        "4. Ask the question in the same language that the patient has been using\n"
-        "5. Focus on NEW information that hasn't been covered yet\n"
-        "6. Be direct and concise - ask only ONE question\n"
-        "Based on this patient history, ask exactly one relevant follow-up question that has NOT been asked before.\n\n"
+        f"Generate unique follow-up question in {lang_name} based on:\n"
+        "Conversation History:\n" + "\n".join([f"Q{i+1}: {q}\nA{i+1}: {a}" 
+                                             for i, (q, a) in enumerate(previous_qa)]) + "\n\n"
+        "Rules:\n"
+        "1. Ask ONE new question in {lang_name}\n"
+        "2. Avoid repeating: {avoid_list}\n"
+        "3. Progress diagnosis logically\n"
+        "4. Consider: {recent_answers}\n\n"
+        "Suggested question:".format(
+            lang_name=lang_name,
+            avoid_list=", ".join(avoid_words + session.get('asked_questions', [])[-2:]),
+            recent_answers=", ".join(answers[-2:])
+        )
     )
     
+    # Generate with higher temperature for variety
     response = med_chat_model.generate_content(
         prompt,
-        generation_config={"temperature": 0.8} 
+        generation_config={"temperature": 0.8, "top_p": 0.95}
     )
+    question = response.text.strip()
     
-    # Store this question so we don't repeat it
-    new_question = response.text.strip()
-    return new_question
+    # Add question tracking by topic
+    current_topics = _extract_topics(question, selected_lang)
+    session['topics'] = session.get('topics', []) + current_topics
+    request.session['chat_session'] = session
+    
+    return question
 
+def _extract_topics(question, lang):
+    topic_map = {
+        'en-US': {'fever': ['fever', 'temperature', 'thermometer'],
+                 'pain': ['pain', 'hurt', 'ache']},
+        'hi-IN': {'fever': ['बुखार', 'तापमान', 'थर्मामीटर'],
+                 'pain': ['दर्द', 'पीड़ा']},
+        # Add other languages
+    }
+    lang_topics = topic_map.get(lang, topic_map['en-US'])
+    return [topic for topic, keywords in lang_topics.items()
+           if any(kw in question.lower() for kw in keywords)]
 def _compile_history(initial_prompt, answers, asked_questions=None):
     """
     Compile the initial prompt (if any) and patient answers into a single text blob.
@@ -556,29 +670,46 @@ def _compile_history(initial_prompt, answers, asked_questions=None):
     
     return "\n".join(history)
 
-def _generate_report(history_text):
+def _generate_report(history_text, request):
     """
     Send the full history to GenAI to generate the medical report and diagnosis.
+    Only allows specializations from the predefined list.
     """
-    prompt = f"""
-    Generate a medical report with these sections:
-    1. History of Present Illness
-    2. Medications
-    3. Allergies
+    # Define allowed specializations from the form
+    allowed_specializations = [
+        "Cardiology", "Dermatology", "Neurology", "Orthopedics",
+        "Pediatrics", "Psychiatry", "General Medicine", "Other"
+    ]
     
-    Followed by the delimiter '###1234###' and your preliminary diagnosis.
-    
-    Patient history:
-    {history_text}
-    """
+    prompt = (
+        "Generate medical report in English with these sections:\n"
+        "1. History of Present Illness\n"
+        "2. Medications\n3. Allergies\n"
+        "Followed by '###1234###' and diagnosis in English.\n"
+        "Then add '###SPECIALIZATION###' followed by ONE recommended doctor specialization "
+        "from this exact list: {specializations}. If unsure, choose General Medicine.\n\n"
+        "Patient history (may contain multilingual input):\n{history_text}"
+    ).format(
+        specializations=", ".join(allowed_specializations),
+        history_text=history_text
+    )
     
     response = report_model.generate_content(
         prompt,
         generation_config={"temperature": 0.3}
     )
     full = response.text.strip()
-    report, _, diag = full.partition('###1234###')
-    return report.strip(), diag.strip()
+
+    report, _, rest = full.partition('###1234###')
+    diagnosis, _, specialization = rest.partition('###SPECIALIZATION###')
+    
+    # Clean and validate specialization
+    specialization = specialization.strip()
+    if specialization not in allowed_specializations:
+        specialization = "General Medicine"  # Default if invalid
+    
+    return report.strip(), diagnosis.strip(), specialization
+
 
 @csrf_exempt
 def speech_to_text(request):

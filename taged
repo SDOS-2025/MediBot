@@ -1,0 +1,292 @@
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/__init__.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/__init__.cpython-312.pyc[m
+[1mindex 20c158c..2fdd392 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/__init__.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/__init__.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/admin.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/admin.cpython-312.pyc[m
+[1mindex bb79de1..329c037 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/admin.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/admin.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/ai_wrapper.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/ai_wrapper.cpython-312.pyc[m
+[1mindex 6edbd80..ed6ef67 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/ai_wrapper.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/ai_wrapper.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/apps.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/apps.cpython-312.pyc[m
+[1mindex 7c5f8e9..085dcfc 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/apps.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/apps.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/backends.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/backends.cpython-312.pyc[m
+[1mindex 77bd1c3..60ff6fd 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/backends.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/backends.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/middleware.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/middleware.cpython-312.pyc[m
+[1mindex a6ccc93..59f4583 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/middleware.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/middleware.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/models.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/models.cpython-312.pyc[m
+[1mindex 77c0bdf..68a0a67 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/models.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/models.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/speech_to_text.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/speech_to_text.cpython-312.pyc[m
+[1mindex 3358997..e8e8cc8 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/speech_to_text.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/speech_to_text.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/urls.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/urls.cpython-312.pyc[m
+[1mindex 1258e5d..19eb67e 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/urls.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/urls.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/utils.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/utils.cpython-312.pyc[m
+[1mindex 12a1aa2..ec1b3c7 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/__pycache__/utils.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/__pycache__/utils.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0001_initial.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0001_initial.cpython-312.pyc[m
+[1mindex 2b8c49a..aca9fb8 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0001_initial.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0001_initial.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0002_customuser_groups_customuser_is_superuser_and_more.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0002_customuser_groups_customuser_is_superuser_and_more.cpython-312.pyc[m
+[1mindex bc43096..b7d07b2 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0002_customuser_groups_customuser_is_superuser_and_more.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0002_customuser_groups_customuser_is_superuser_and_more.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0003_customuser_bio_customuser_email_customuser_full_name_and_more.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0003_customuser_bio_customuser_email_customuser_full_name_and_more.cpython-312.pyc[m
+[1mindex c4c0155..9eb2b05 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0003_customuser_bio_customuser_email_customuser_full_name_and_more.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0003_customuser_bio_customuser_email_customuser_full_name_and_more.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0004_doctorprofile_patientprofile.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0004_doctorprofile_patientprofile.cpython-312.pyc[m
+[1mindex b7d3080..6b1308c 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0004_doctorprofile_patientprofile.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0004_doctorprofile_patientprofile.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0005_treatment.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0005_treatment.cpython-312.pyc[m
+[1mindex 8aaf8de..5f47394 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0005_treatment.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0005_treatment.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0006_treatment_reqd.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0006_treatment_reqd.cpython-312.pyc[m
+[1mindex 99ebcc2..c028306 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0006_treatment_reqd.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0006_treatment_reqd.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0007_customuser_address_customuser_age_and_more.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0007_customuser_address_customuser_age_and_more.cpython-312.pyc[m
+[1mindex dcd4c15..26e2be9 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0007_customuser_address_customuser_age_and_more.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0007_customuser_address_customuser_age_and_more.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0008_alter_customuser_email.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0008_alter_customuser_email.cpython-312.pyc[m
+[1mindex ea4f743..0bee401 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0008_alter_customuser_email.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0008_alter_customuser_email.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0009_fix_migration_conflicts.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0009_fix_migration_conflicts.cpython-312.pyc[m
+[1mindex a1bc562..e91f28c 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0009_fix_migration_conflicts.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/0009_fix_migration_conflicts.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/__init__.cpython-312.pyc b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/__init__.cpython-312.pyc[m
+[1mindex 48ed90e..da631f5 100644[m
+Binary files a/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/__init__.cpython-312.pyc and b/Merilife/MediBot/chatbot-website/chatbot/migrations/__pycache__/__init__.cpython-312.pyc differ
+[1mdiff --git a/Merilife/MediBot/chatbot-website/chatbot/templates/chatbot/medical_chat.html b/Merilife/MediBot/chatbot-website/chatbot/templates/chatbot/medical_chat.html[m
+[1mindex 5863afe..6cccaa8 100644[m
+[1m--- a/Merilife/MediBot/chatbot-website/chatbot/templates/chatbot/medical_chat.html[m
+[1m+++ b/Merilife/MediBot/chatbot-website/chatbot/templates/chatbot/medical_chat.html[m
+[36m@@ -38,7 +38,11 @@[m
+     .navbar-brand i { color: var(--primary); margin-right: 0.5rem; }[m
+     .nav-link { font-weight: 500; padding: 0.25rem 0.75rem !important; border-radius: 6px; transition: background .3s, transform .3s; }[m
+     .nav-link:hover { background: rgba(155,89,182,0.1); transform: translateY(-2px); }[m
+[31m-[m
+[32m+[m[32m    /* Add to style section */[m
+[32m+[m[32m    .chat-disabled {[m
+[32m+[m[32m      opacity: 0.6;[m
+[32m+[m[32m      pointer-events: none;[m
+[32m+[m[32m    }[m
+     .hero {[m
+       flex: 1;[m
+       display: flex;[m
+[36m@@ -47,6 +51,8 @@[m
+       background: linear-gradient(135deg, var(--secondary), var(--primary), var(--secondary));[m
+       background-size: 300% 300%;[m
+       animation: gradientBG 10s ease infinite;[m
+[32m+[m[32m      min-height: calc(100vh - 80px); /* Account for header height */[m
+[32m+[m[32m      padding: 20px 0;[m
+     }[m
+     .chat-container {[m
+       background: var(--bg);[m
+[36m@@ -59,9 +65,22 @@[m
+       box-shadow: 0 8px 20px rgba(0,0,0,0.15);[m
+       overflow: hidden;[m
+       animation: fadeInUp 1s ease;[m
+[32m+[m[32m      display: none; /* Hidden initially */[m
+[32m+[m[32m      height: 100%;[m
+[32m+[m[32m      max-height: 80vh;[m
+[32m+[m[32m      display: flex;[m
+[32m+[m[32m      flex-direction: column;[m
+     }[m
+     .chat-header { background: var(--primary); color: #fff; padding: 1rem; font-weight: 600; }[m
+[31m-    .chat-body { flex: 1; padding: 1rem; overflow-y: auto; }[m
+[32m+[m[32m    .chat-body {[m[41m [m
+[32m+[m[32m      flex: 1;[m[41m [m
+[32m+[m[32m      padding: 1rem;[m[41m [m
+[32m+[m[32m      overflow-y: auto;[m
+[32m+[m[32m      flex: 1;[m
+[32m+[m[32m      min-height: 200px;[m
+[32m+[m[32m      overflow-y: auto;[m
+[32m+[m[32m      padding: 15px;[m[41m [m
+[32m+[m[32m    }[m
+     .message { margin-bottom: 1rem; max-width: 80%; padding: 0.75rem 1rem; border-radius: 12px; }[m
+     .bot { background: #e0f2f1; align-self: flex-start; color: var(--text); }[m
+     .user { background: var(--primary); color: #fff; align-self: flex-end; }[m
+[36m@@ -71,23 +90,87 @@[m
+       padding: 0.75rem;[m
+       border-top: 1px solid rgba(0,0,0,0.1);[m
+       background: rgba(255,255,255,0.85);[m
+[32m+[m[32m      margin-top: auto; /* Pushes footer to bottom */[m
+[32m+[m[32m      padding: 15px;[m
+[32m+[m[32m      background: #f8f9fa;[m
+[32m+[m[32m      border-top: 1px solid #dee2e6;[m
+     }[m
+     .chat-footer input { flex: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }[m
+[31m-    .chat-footer select { margin: 0 0.5rem; }[m
+     #mic-btn.active i { color: red; animation: pulse 1s infinite; }[m
+[32m+[m[32m    .specialization {[m
+[32m+[m[32m      color: #9b59b6;[m
+[32m+[m[32m      font-weight: 600;[m
+[32m+[m[32m      padding: 8px;[m
+[32m+[m[32m      border-left: 3px solid #9b59b6;[m
+[32m+[m[32m      margin: 10px 0;[m
+[32m+[m[32m    }[m
+[32m+[m[32m    /* Language Modal Styles */[m
+[32m+[m[32m    .language-modal {[m
+[32m+[m[32m      position: fixed;[m
+[32m+[m[32m      top: 0;[m
+[32m+[m[32m      left: 0;[m
+[32m+[m[32m      width: 100%;[m
+[32m+[m[32m      height: 100%;[m
+[32m+[m[32m      background: rgba(0,0,0,0.8);[m
+[32m+[m[32m      display: flex;[m
+[32m+[m[32m      justify-content: center;[m
+[32m+[m[32m      align-items: center;[m
+[32m+[m[32m      z-index: 9999;[m
+[32m+[m[32m      backdrop-filter: blur(5px);[m
+[32m+[m[32m    }[m
+[32m+[m[32m    .modal-content {[m
+[32m+[m[32m      background: white;[m
+[32m+[m[32m      padding: 2rem;[m
+[32m+[m[32m      border-radius: 1rem;[m
+[32m+[m[32m      text-align: center;[m
+[32m+[m[32m      max-width: 500px;[m
+[32m+[m[32m    }[m
+[32m+[m[32m    .lang-btn {[m
+[32m+[m[32m      width: 200px;[m
+[32m+[m[32m      transition: transform 0.3s;[m
+[32m+[m[32m      margin: 0.5rem;[m
+[32m+[m[32m    }[m
+[32m+[m[32m    .lang-btn:hover {[m
+[32m+[m[32m      transform: scale(1.05);[m
+[32m+[m[32m    }[m
+[32m+[m[32m    #lang-mic-btn {[m
+[32m+[m[32m      border-radius: 50%;[m
+[32m+[m[32m      width: 60px;[m
+[32m+[m[32m      height: 60px;[m
+[32m+[m[32m      font-size: 1.5rem;[m
+[32m+[m[32m      margin-top: 1rem;[m
+[32m+[m[32m    }[m
+[32m+[m
+     @keyframes fadeInDown { from { opacity:0; transform: translateY(-20px);} to{opacity:1;transform:translateY(0);} }[m
+     @keyframes fadeInUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }[m
+     @keyframes gradientBG {[m
+       0% { background-position: 0% 50%; }[m
+[31m-      25% { background-position: 50% 100%; }[m
+       50% { background-position: 100% 50%; }[m
+[31m-      75% { background-position: 50% 0%; }[m
+       100% { background-position: 0% 50%; }[m
+     }[m
+     @keyframes pulse { 0%{transform:scale(1);}50%{transform:scale(1.1);}100%{transform:scale(1);} }[m
+   </style>[m
+ </head>[m
+ <body>[m
+[32m+[m[32m  <!-- Language Selection Modal -->[m
+[32m+[m[32m  <div class="language-modal">[m
+[32m+[m[32m    <div class="modal-content">[m
+[32m+[m[32m      <h3>Select Your Language</h3>[m
+[32m+[m[32m      <div class="language-options">[m
+[32m+[m[32m        <button class="lang-btn btn btn-primary" data-lang="en-US">English</button>[m
+[32m+[m[32m        <button class="lang-btn btn btn-primary" data-lang="hi-IN">हिन्दी (Hindi)</button>[m
+[32m+[m[32m        <button class="lang-btn btn btn-primary" data-lang="es-ES">Español (Spanish)</button>[m
+[32m+[m[32m        <button class="lang-btn btn btn-primary" data-lang="fr-FR">Français (French)</button>[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m      <div class="voice-select">[m
+[32m+[m[32m        <p class="mt-3">Or speak your language:</p>[m
+[32m+[m[32m        <button class="btn btn-danger" id="lang-mic-btn">[m
+[32m+[m[32m          <i class="fas fa-microphone"></i>[m
+[32m+[m[32m        </button>[m
+[32m+[m[32m      </div>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m  </div>[m
+[32m+[m
+   <header>[m
+     <nav class="navbar navbar-expand-lg navbar-light">[m
+       <div class="container">[m
+[36m@@ -128,15 +211,10 @@[m
+       <div class="chat-footer">[m
+         {% csrf_token %}[m
+         <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">[m
+[31m-        <select id="lang-select" class="form-control form-control-sm">[m
+[31m-          <option value="en-US">English</option>[m
+[31m-          <option value="hi-IN">Hindi</option>[m
+[31m-          <option value="es-ES">Spanish</option>[m
+[31m-          <option value="fr-FR">French</option>[m
+[31m-          <!-- add more -->[m
+[31m-        </select>[m
+         <button class="btn btn-outline-secondary" id="mic-btn" title="Speak"><i class="fas fa-microphone"></i></button>[m
+         <button class="btn btn-primary ml-2" id="send-btn">Send</button>[m
+[32m+[m[32m        <!-- Add status message -->[m
+[32m+[m[32m        <div id="chat-status" class="text-muted ml-2" style="display: none;"></div>[m
+       </div>[m
+     </div>[m
+   </div>[m
+[36m@@ -154,16 +232,110 @@[m
+ [m
+     // DOM refs[m
+     const chatBody = $('#chat-body'),[m
+[31m-          input    = $('#user-input'),[m
+[31m-          sendBtn  = $('#send-btn'),[m
+[31m-          micBtn   = $('#mic-btn'),[m
+[31m-          langSel  = $('#lang-select');[m
+[32m+[m[32m          input = $('#user-input'),[m
+[32m+[m[32m          sendBtn = $('#send-btn'),[m
+[32m+[m[32m          micBtn = $('#mic-btn'),[m
+[32m+[m[32m          langModal = $('.language-modal'),[m
+[32m+[m[32m          langButtons = $('.lang-btn'),[m
+[32m+[m[32m          langMicBtn = $('#lang-mic-btn');[m
+[32m+[m
+[32m+[m[32m    let selectedLang = null;[m
+[32m+[m[32m    let recognition;[m
+[32m+[m[32m    let languageRecognition;[m
+ [m
+[31m-    // Add message to UI (and speak bot ones)[m
+[32m+[m[32m    // Add message to UI[m
+[32m+[m[32m    // Update addMessage function[m
+     function addMessage(text, cls) {[m
+[31m-      chatBody.append($('<div>').addClass('message '+cls).text(text));[m
+[32m+[m[32m      let message = $('<div>').addClass('message '+cls);[m
+[32m+[m[41m      [m
+[32m+[m[32m      if (cls === 'bot' && text.includes('specialization')) {[m
+[32m+[m[32m        message.addClass('specialization');[m
+[32m+[m[32m        message.html(`<strong>${text}</strong>`);[m
+[32m+[m[32m      } else {[m
+[32m+[m[32m        message.text(text);[m
+[32m+[m[32m      }[m
+[32m+[m[41m      [m
+[32m+[m[32m      chatBody.append(message);[m
+       chatBody.scrollTop(chatBody[0].scrollHeight);[m
+[31m-      if (cls === 'bot') speak(text, langSel.val());[m
+[32m+[m[32m      if (cls === 'bot') speak(text, selectedLang);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Initialize speech recognition[m
+[32m+[m[32m    function initSpeechRecognition() {[m
+[32m+[m[32m      if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {[m
+[32m+[m[32m        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;[m
+[32m+[m[32m        recognition = new SR();[m
+[32m+[m[32m        recognition.continuous = false;[m
+[32m+[m[32m        recognition.interimResults = false;[m
+[32m+[m[32m        recognition.lang = selectedLang;[m
+[32m+[m
+[32m+[m[32m        micBtn.on('click', () => {[m
+[32m+[m[32m          recognition.lang = selectedLang;[m
+[32m+[m[32m          micBtn.toggleClass('active');[m
+[32m+[m[32m          if (micBtn.hasClass('active')) recognition.start();[m
+[32m+[m[32m          else recognition.stop();[m
+[32m+[m[32m        });[m
+[32m+[m
+[32m+[m[32m        recognition.onresult = event => {[m
+[32m+[m[32m          const transcript = event.results[0][0].transcript;[m
+[32m+[m[32m          input.val(transcript);[m
+[32m+[m[32m          sendAnswer();[m
+[32m+[m[32m        };[m
+[32m+[m
+[32m+[m[32m        recognition.onend = () => micBtn.removeClass('active');[m
+[32m+[m[32m        recognition.onerror = e => console.error('Speech error:', e);[m
+[32m+[m[32m      } else {[m
+[32m+[m[32m        micBtn.hide();[m
+[32m+[m[32m      }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Language detection setup[m
+[32m+[m[32m    function initLanguageRecognition() {[m
+[32m+[m[32m      if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {[m
+[32m+[m[32m        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;[m
+[

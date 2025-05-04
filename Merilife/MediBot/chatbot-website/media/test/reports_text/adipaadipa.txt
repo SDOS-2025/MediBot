@@ -321,3 +321,508 @@ The patient reports no known allergies.
 Diagnosis: **Preliminary Diagnosis:**
 
 Acute Upper Respiratory Infection (URI), likely viral. Differential diagnosis includes influenza and common cold. Further evaluation may be warranted if symptoms worsen or do not improve within a few days. Recommend symptomatic treatment including rest, hydration, and over-the-counter fever reducers/pain relievers.
+Q1: What are your main symptoms?
+A1: fever
+
+Q2: How long have you been experiencing these symptoms?
+A2: 2 days
+
+Q3: Do you have any previous medical conditions?
+A3: no
+
+Q4: 
+A4: no
+
+Q5: 
+A5: no
+
+Q6: 
+A6: no
+
+Q6: 
+A6: no
+
+Q7: 
+A7: no
+
+=== 2025-05-05 01:19:49 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a chief complaint of fever, which has been present for the past two days. The patient denies any other symptoms at this time. Further questioning regarding associated symptoms (e.g., chills, body aches, cough, sore throat, headache, nausea, vomiting, diarrhea, rash) was not performed.
+
+**2. Medications:**
+
+The patient reports taking no medications.
+
+**3. Allergies:**
+
+The patient reports no known allergies.
+Diagnosis: **Preliminary Diagnosis:**
+
+Fever, etiology undetermined. Further investigation is required to determine the underlying cause of the fever. Possible considerations include viral or bacterial infection.
+Q1: What are your main symptoms?
+A1: rgbrghb
+
+Q2: How long have you been experiencing these symptoms?
+A2: rtgrth
+
+Q1: What are your main symptoms?
+A1: fever
+
+Q2: How long have you been experiencing these symptoms?
+A2: 2 days
+
+Q3: Do you have any previous medical conditions?
+A3: no
+
+Q4: 
+A4: no
+
+Q5: 
+A5: no
+
+Q6: 
+A6: no
+
+Q7: 
+A7: no
+
+=== 2025-05-05 01:55:54 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a chief complaint of fever, which has been present for the past two days. The patient denies any other symptoms at this time. No further information was provided regarding the severity, pattern, or associated symptoms of the fever.
+
+**2. Medications:**
+
+The patient reports taking no medications.
+
+**3. Allergies:**
+
+The patient reports no known allergies.
+Diagnosis: **Preliminary Diagnosis:**
+
+Fever of unknown origin (FUO). Further investigation is required to determine the etiology of the fever. Possible causes include viral infection, bacterial infection, or other inflammatory conditions. Further questioning regarding associated symptoms (e.g., cough, sore throat, body aches, headache, rash, gastrointestinal symptoms) and a physical examination are necessary to narrow the differential diagnosis.
+Q1: What are your main symptoms?
+A1: cold
+
+Q2: How long have you been experiencing these symptoms?
+A2: 3 months
+
+Q3: Do you have any previous medical conditions?
+A3: no
+
+Q4: 
+A4: yes fevers
+
+Q1: आपके मुख्य लक्षण क्या हैं?
+A1: mujhko fever ho raha hai
+
+Q2: आपको ये लक्षण कितने समय से हैं?
+A2: teen din se
+
+Q3: क्या आपको कोई पूर्व चिकित्सीय स्थितियां हैं?
+A3: nahi
+
+Q4: 
+A4: nahi
+
+Q5: 
+A5: nahi
+
+Q6: 
+A6: nahi
+
+Q7: 
+A7: nahi
+
+Q1: आपके मुख्य लक्षण क्या हैं?
+A1: fever
+
+Q2: आपको ये लक्षण कितने समय से हैं?
+A2: kaafi samay se
+
+Q3: क्या आपको कोई पूर्व चिकित्सीय स्थितियां हैं?
+A3: nahi
+
+Q4: 
+A4: 102
+
+Q5: 
+A5: 102 degree
+
+Q6: 
+A6: 102 degree
+
+Q1: आपके मुख्य लक्षण क्या हैं?
+A1: fever
+
+Q2: आपको ये लक्षण कितने समय से हैं?
+A2: 3 din
+
+Q3: क्या आपको कोई पूर्व चिकित्सीय स्थितियां हैं?
+A3: nahi
+
+Q4: 
+A4: haan
+
+Q5: 
+A5: nahi
+
+Q6: 
+A6: thand lag rahi hai
+
+Q7: 
+A7: bas thand lag rahi hai
+
+=== 2025-05-05 03:32:39 ===
+Report:
+## चिकित्सा रिपोर्ट
+
+**वर्तमान बीमारी का इतिहास (History of Present Illness):**
+
+मरीज ने बताया कि उसे पिछले 3 दिनों से बुखार है। मरीज ने यह भी बताया कि उसे ठंड लग रही है। मरीज के अनुसार, उसे बस ठंड लग रही है। मरीज का कहना है कि उसे पहले कोई चिकित्सीय स्थिति नहीं थी।
+
+**दवाएं (Medications):**
+
+मरीज वर्तमान में कोई दवा नहीं ले रहा है।
+
+**एलर्जी (Allergies):**
+
+मरीज को किसी भी दवा या पदार्थ से कोई एलर्जी नहीं है।
+Diagnosis: **निदान (Diagnosis):**
+
+संभावित वायरल संक्रमण (संभावित वायरल संक्रमण)
+Q1: आपके मुख्य लक्षण क्या हैं?
+A1: fever ho raha hai
+
+Q2: आपको ये लक्षण कितने समय से हैं?
+A2: 3 din
+
+Q3: क्या आपको कोई पूर्व चिकित्सीय स्थितियां हैं?
+A3: nahi
+
+Q4: 
+A4: 3 din se
+
+Q5: 
+A5: nahi
+
+Q6: 
+A6: haan, tapmaan 104 degree hai
+
+Q7: 
+A7: bhook kam lag rahi hai
+
+Q1: आपके मुख्य लक्षण क्या हैं?
+A1: fever
+
+Q2: आपको ये लक्षण कितने समय से हैं?
+A2: 2 din
+
+Q3: क्या आपको कोई पूर्व चिकित्सीय स्थितियां हैं?
+A3: nahi
+
+Q4: 
+A4: 2 din
+
+Q5: 
+A5: nahi
+
+Q6: 
+A6: nahi
+
+Q7: 
+A7: nahi
+
+Q1: What are your main symptoms?
+A1: cold
+
+Q2: How long have you been experiencing these symptoms?
+A2: 2 days
+
+Q3: Do you have any previous medical conditions?
+A3: no
+
+Q4: 
+A4: no
+
+Q5: 
+A5: consistent
+
+Q6: 
+A6: no
+
+Q7: 
+A7: no
+
+=== 2025-05-05 04:13:20 ===
+Report:
+## Medical Report
+
+**1. History of Present Illness:**
+
+The patient presents with a primary complaint of a cold, which has been ongoing for approximately 2 days. The patient denies any prior medical conditions. Follow-up questions yielded the following responses: Follow-up 1: no, Follow-up 2: consistent, Follow-up 3: no, Follow-up 4: no. Further details regarding the nature of the "consistent" response in Follow-up 2 are needed for a more complete understanding.
+
+**2. Medications:**
+
+The patient reports taking no current medications.
+
+**3. Allergies:**
+
+The patient reports no known allergies.
+Diagnosis: **Diagnosis:**
+
+Upper Respiratory Infection (URI), likely viral in origin, based on the reported symptom of a cold and duration of 2 days. Further evaluation may be necessary if symptoms worsen or persist beyond a week.
+Recommended Specialization: **Recommended Doctor Specialization:**
+
+General Practitioner or Family Medicine Physician
+Q1: What are your main symptoms?
+A1: cold
+
+Q2: How long have you been experiencing these symptoms?
+A2: 3 days
+
+Q3: Do you have any previous medical conditions?
+A3: no
+
+Q4: 
+A4: no
+
+Q5: 
+A5: no
+
+Q6: 
+A6: no
+
+Q7: 
+A7: just feeling cold and shivering
+
+=== 2025-05-05 04:21:13 ===
+Report:
+## Medical Report
+
+**1. History of Present Illness:**
+
+The patient presents with a primary complaint of feeling cold and shivering. The onset of these symptoms occurred approximately 3 days ago. The patient reports no prior medical conditions. Further questioning regarding specific symptoms such as fever, cough, sore throat, or body aches yielded no additional information. The patient reiterates feeling cold and shivering as the primary concern.
+
+**2. Medications:**
+
+The patient reports taking no medications.
+
+**3. Allergies:**
+
+The patient reports no known allergies.
+Diagnosis: **Diagnosis:**
+
+Possible Viral Upper Respiratory Infection (URI) - Rule out Influenza.
+Recommended Specialization: **Recommended Doctor Specialization:**
+
+General Practitioner (GP) or Family Medicine Physician.
+Q1: What are your main symptoms?
+A1: cold and shivering
+
+Q2: How long have you been experiencing these symptoms?
+A2: 2 days
+
+Q3: Do you have any previous medical conditions?
+A3: on
+
+Q4: 
+A4: no
+
+Q5: 
+A5: no stable
+
+Q6: 
+A6: whole body
+
+Q7: 
+A7: no
+
+=== 2025-05-05 04:26:06 ===
+Report:
+Here's a generated medical report based on the provided patient history:
+
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with complaints of cold and shivering, which have been ongoing for the past two days. The patient reports experiencing these symptoms throughout the whole body. Further questioning regarding the onset, severity, and associated symptoms (e.g., fever, cough, sore throat, body aches) is needed to fully characterize the illness. The patient denies any further information.
+
+**2. Medications:**
+
+No medications are currently reported.
+
+**3. Allergies:**
+
+No allergies are currently reported.
+Diagnosis: **Diagnosis:**
+
+Suspected Viral Upper Respiratory Infection (Differential Diagnosis: Influenza, Common Cold). Further evaluation is required to confirm the diagnosis and rule out other potential causes of the patient's symptoms.
+Recommended Specialization: **Recommended Doctor Specialization:**
+
+General Practitioner or Internal Medicine Physician.
+Q1: What are your main symptoms?
+A1: fever
+
+Q2: How long have you been experiencing these symptoms?
+A2: 2 days
+
+Q3: Do you have any previous medical conditions?
+A3: no
+
+Q4: 
+A4: 2 days back
+
+Q5: 
+A5: 102 degrees
+
+Q6: 
+A6: no
+
+Q7: 
+A7: high
+
+=== 2025-05-05 04:31:45 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a chief complaint of fever for the past 2 days. The patient reports a temperature of 102 degrees Fahrenheit (as reported 2 days back). The patient denies any previous medical conditions. The patient describes the fever as "high".
+
+**2. Medications:**
+
+The patient reports taking no medications.
+
+**3. Allergies:**
+
+The patient reports no known allergies.
+Diagnosis: **Diagnosis:**
+
+Fever of unknown origin. Further investigation is required to determine the underlying cause.
+Recommended Specialization: General Medicine
+Q1: What are your main symptoms?
+A1: cold
+
+Q2: How long have you been experiencing these symptoms?
+A2: 1 day
+
+Q3: Do you have any previous medical conditions?
+A3: no
+
+Q4: 
+A4: no
+
+Q5: 
+A5: no
+
+Q6: 
+A6: no
+
+Q7: 
+A7: no
+
+=== 2025-05-05 04:44:43 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a chief complaint of a cold, which has been present for one day. The patient denies any previous medical conditions. No further details were provided regarding the specific symptoms associated with the cold.
+
+**2. Medications:**
+
+The patient reports taking no medications.
+
+**3. Allergies:**
+
+The patient reports no known allergies.
+Diagnosis: **Diagnosis:**
+
+Common Cold (Acute Viral Upper Respiratory Infection)
+Recommended Specialization: General Medicine
+Q1: What are your main symptoms?
+A1: fever
+
+Q2: How long have you been experiencing these symptoms?
+A2: 2 days
+
+Q3: Do you have any previous medical conditions?
+A3: no
+
+Q4: 
+A4: fever and shivering and depressino
+
+Q5: 
+A5: yes chills
+
+Q6: 
+A6: yes
+
+Q7: 
+A7: sadness too due to no internship
+
+=== 2025-05-05 04:55:27 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a chief complaint of fever for the past two days. Associated symptoms include shivering, chills, and feelings of depression and sadness. The patient reports experiencing chills. The patient also reports sadness related to a lack of internship opportunities. There is no reported history of previous medical conditions.
+
+**2. Medications:**
+
+The patient reports taking no medications.
+
+**3. Allergies:**
+
+The patient reports no known allergies.
+Diagnosis: **Diagnosis:**
+
+Fever of unknown origin, possibly viral. Rule out influenza or other common febrile illnesses. Consider reactive depression related to situational stressors.
+Recommended Specialization: General Medicine
+Q1: What are your main symptoms?
+A1: very weak
+
+Q2: How long have you been experiencing these symptoms?
+A2: 2 days
+
+Q3: Do you have any previous medical conditions?
+A3: depression
+
+Q4: 
+A4: yes, no sleep
+
+Q5: 
+A5: I got plagiarism in a subject that's why
+
+Q6: 
+A6: I got failed in a course
+
+Q7: 
+A7: 2-3 hours
+
+=== 2025-05-05 05:00:38 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a primary complaint of significant weakness, which has been ongoing for the past two days. The patient reports a history of depression. Further questioning revealed the patient is experiencing insomnia, reporting a lack of sleep. The patient attributes their current state to academic stressors, specifically mentioning plagiarism in a subject and failing a course. The patient reports sleeping only 2-3 hours per night.
+
+**2. Medications:**
+
+No medications were reported by the patient.
+
+**3. Allergies:**
+
+No allergies were reported by the patient.
+Diagnosis: Diagnosis: Acute stress reaction with associated insomnia and weakness. Possible exacerbation of underlying depression.
+Recommended Specialization: Psychiatry
