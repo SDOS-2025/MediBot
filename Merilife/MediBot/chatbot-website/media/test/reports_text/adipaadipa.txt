@@ -22,3 +22,302 @@ Diagnosis: **Preliminary Diagnosis:**  Upper Respiratory Infection (URI)
 
 
 **Note:** This is a preliminary diagnosis based on limited information. Further investigation, including a physical examination and potentially laboratory testing, may be necessary to confirm the diagnosis and rule out other potential causes.
+Q1: fever cold and cough
+Q2: 4 5 days
+Q3: yes,mild asthma
+Q4: yes rotahaler
+Q5: nope rarely use it
+=== 2025-05-04 20:45:37 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a four-to-five-day history of fever, chills, and cough.  The onset of symptoms was gradual.
+
+**2. Medications:**
+
+The patient reports using a Rotahaler, an inhaler for asthma management.  Use is infrequent, reported as "rarely."
+
+**3. Allergies:**
+
+No known drug allergies are reported.
+Diagnosis: **Preliminary Diagnosis:**
+
+Upper Respiratory Infection (URI)  Further investigation may be needed to rule out other possibilities.  Given the patient's history of mild asthma, monitoring for any respiratory compromise is warranted.
+Q1: bukhar h mujhe
+Q2: 4 5 din
+Q3: asthma h mujhe
+Q1: bukhar hai mujhe
+Q2: 4 5 din
+Q3: nhi
+Q4: nope
+Q1: bukhar h mujhe
+Q2: 3 4 days
+Q3: ashtma h mujhe
+Q4: thioda bahut ho rha h , zyada nhi
+Q1: bukhar h mujhe
+Q2: 4 5 days
+Q3: nhi
+Q4: thoda sa sardi h bas
+Q5: nope
+=== 2025-05-04 21:11:33 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presented complaining of "bukhar" (fever) for 4-5 days.  Initial complaint was solely fever.  Follow-up inquiries revealed mild rhinorrhea (runny nose) described as "thoda sa sardi" on day one, but this symptom resolved by the second follow-up.
+
+
+**2. Medications:**
+
+None reported.
+
+
+**3. Allergies:**
+
+None reported.
+Diagnosis: **Preliminary Diagnosis:**  Possible viral upper respiratory infection (URI).  Further investigation may be warranted depending on the persistence or worsening of symptoms.
+Q1: pihj
+Q2: प्रेजेंटेड कंप्लेनिंग का बुक हार्ट फीवर का 4 तो 5 डेज
+Q3: jgf
+Q4: jkhjk
+Q1: fever and cold
+Q2: 2 days
+Q3: nope
+Q4: cough and some bioady aches
+Q5: cough and bvodya ches
+=== 2025-05-04 21:34:36 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presented with a two-day history of fever and cold symptoms.  Follow-up reports indicate the development of a cough and body aches.  The description of body aches is inconsistent across reports ("bioady aches" and "bvodya ches" in the follow-ups suggest potential transcription errors).  Further clarification is needed regarding the nature and severity of the body aches.
+
+
+**2. Medications:**
+
+None reported.
+
+
+**3. Allergies:**
+
+None reported.
+Diagnosis: **Preliminary Diagnosis:**  Upper Respiratory Infection (URI).  Further investigation is required to confirm the diagnosis and rule out other potential causes of the patient's symptoms, particularly given the inconsistent reporting of body aches.  A more detailed physical examination and possibly further laboratory testing (e.g., rapid influenza test, complete blood count) are recommended.
+Q1: ihjkg[hiohhijpughouhoujopu90-[hiklnoP:"jou[hi
+Q1: fever
+Q2: 2 dayts
+Q3: nope
+Q4: bodya ches
+Q5: nopew
+=== 2025-05-04 21:37:44 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a fever of two days' duration.  The patient reports no other significant symptoms at this time.  Further investigation into the cause of the fever is warranted.
+
+
+**2. Medications:**
+
+None reported.
+
+
+**3. Allergies:**
+
+None reported.
+Diagnosis: **Preliminary Diagnosis:**
+
+Fever of unknown origin (FUO).  Further investigation, including a complete blood count (CBC) and possibly other diagnostic tests, is necessary to determine the underlying cause of the fever.
+Q1: fever
+Q2: 2 days
+Q3: nope
+Q4: fever seems to get worse when i exert myself
+Q5: cough and runny nose
+=== 2025-05-04 21:40:32 ===
+Report:
+## Medical Report
+
+**1. History of Present Illness:**
+
+The patient presents with a chief complaint of fever for the past two days. The patient denies any previous medical conditions. The fever appears to be exacerbated by physical exertion. The patient also reports experiencing a cough and runny nose.
+
+**2. Medications:**
+
+The patient denies taking any medications.
+
+**3. Allergies:**
+
+The patient denies any known allergies.
+Diagnosis: **Preliminary Diagnosis:**
+
+Acute Viral Upper Respiratory Infection (URI), likely the common cold or influenza. Further investigation may be warranted to rule out other potential causes of fever, especially given the exacerbation with exertion.
+Q1: fever
+Q2: 3 days
+Q3: no
+Q4: 100 degree fahrenheit
+Q5: cold and runny nose
+=== 2025-05-04 21:43:05 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a chief complaint of fever, which has been present for the past three days. The patient reports a temperature of 100 degrees Fahrenheit. Additionally, the patient reports symptoms of a cold and runny nose. The patient denies any previous medical conditions.
+
+**2. Medications:**
+
+The patient reports taking no current medications.
+
+**3. Allergies:**
+
+The patient reports no known allergies.
+Diagnosis: **Preliminary Diagnosis:**
+
+Acute Viral Upper Respiratory Infection (URI), likely the common cold.
+Q1: fever
+Q2: 1  day
+Q3: no
+Q4: 100 degree fahrenheit
+Q5: 100 degree fahrenheit
+Q1: fever
+Q2: 1 day
+Q3: no
+Q4: it fluctuates, sometimes it gets very high
+Q5: no body aches
+Q1: fever
+Q2: 1 day
+Q3: cold and fever
+Q4: yes
+Q5: yes
+Q6: yes
+Q7: yes
+=== 2025-05-04 21:52:06 ===
+Report:
+## Medical Report
+
+**1. History of Present Illness:**
+
+The patient presents today complaining of fever, which began approximately one day ago. The patient reports a history of previous cold and fever. The patient responded affirmatively to all follow-up questions (Follow-up 1, Follow-up 2, Follow-up 3, Follow-up 4). Further details regarding these follow-up questions are needed to fully understand the context of the patient's condition.
+
+**2. Medications:**
+
+No current medications were reported by the patient.
+
+**3. Allergies:**
+
+No allergies were reported by the patient.
+Diagnosis: **Preliminary Diagnosis:**
+
+Acute Febrile Illness, etiology undetermined. Further investigation is needed to rule out common viral or bacterial infections, especially given the patient's history of cold and fever. The nature of the follow-up questions answered affirmatively needs to be clarified to guide further diagnostic and treatment strategies.
+Q1: What are your main symptoms?
+A1: fever
+
+Q2: How long have you been experiencing these symptoms?
+A2: 1 day
+
+Q3: Do you have any previous medical conditions?
+A3: cold and fever
+
+Q4: 
+A4: body aches
+
+Q1: What are your main symptoms?
+A1: bukhar h mujhe
+
+Q2: How long have you been experiencing these symptoms?
+A2: 1 din
+
+Q3: Do you have any previous medical conditions?
+A3: nhi
+
+Q4: 
+A4: sardi bhi ho rhi h
+
+Q5: 
+A5: haa
+
+Q6: 
+A6: kamzorui ho rha h
+
+Q7: 
+A7: nope
+
+=== 2025-05-04 22:04:43 ===
+Report:
+**Medical Report**
+
+**1. History of Present Illness:**
+
+The patient presents with a chief complaint of "bukhar h mujhe" (fever). The onset of symptoms is reported as "1 din" (1 day). The patient also reports experiencing "sardi bhi ho rhi h" (cold symptoms), "kamzorui ho rha h" (weakness). The patient denies any previous medical conditions.
+
+**2. Medications:**
+
+The patient reports taking no medications ("nope").
+
+**3. Allergies:**
+
+No allergies were reported ("nhi").
+Diagnosis: **Preliminary Diagnosis:**
+
+Acute Viral Upper Respiratory Infection (URI), likely influenza or common cold. Differential diagnosis includes other viral infections causing fever, cold symptoms, and weakness. Further investigation is needed to rule out other potential causes.
+Q1: What are your main symptoms?
+A1: fever and cold
+
+Q2: How long have you been experiencing these symptoms?
+A2: 2 days
+
+Q3: Do you have any previous medical conditions?
+A3: nope
+
+Q4: 
+A4: not really
+
+Q5: 
+A5: not really
+
+Q6: 
+A6: not really
+
+Q1: What are your main symptoms?
+A1: fever
+
+Q2: How long have you been experiencing these symptoms?
+A2: 1 day
+
+Q3: Do you have any previous medical conditions?
+A3: no
+
+Q4: 
+A4: slight body aches but no chills
+
+Q5: 
+A5: no the appetite is fine
+
+Q6: 
+A6: dry cough , yes
+
+Q7: 
+A7: runny nose
+
+=== 2025-05-04 22:48:49 ===
+Report:
+## Medical Report
+
+**1. History of Present Illness:**
+
+The patient presents with a one-day history of fever. Associated symptoms include slight body aches, but no chills are reported. The patient denies any loss of appetite. They also report a dry cough and a runny nose.
+
+**2. Medications:**
+
+The patient reports taking no medications.
+
+**3. Allergies:**
+
+The patient reports no known allergies.
+Diagnosis: **Preliminary Diagnosis:**
+
+Acute Upper Respiratory Infection (URI), likely viral. Differential diagnosis includes influenza and common cold. Further evaluation may be warranted if symptoms worsen or do not improve within a few days. Recommend symptomatic treatment including rest, hydration, and over-the-counter fever reducers/pain relievers.

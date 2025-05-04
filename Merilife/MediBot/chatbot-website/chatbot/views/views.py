@@ -347,8 +347,8 @@ import google.generativeai as genai
 genai.configure(api_key="AIzaSyB0R26JpwnrxR1iHP7SRdlXImYhG2NAYLQ")
 
 # Create client instances for different purposes
-med_chat_model = genai.GenerativeModel('gemini-1.5-flash')
-report_model = genai.GenerativeModel('gemini-1.5-flash')
+med_chat_model = genai.GenerativeModel('gemini-2.0-flash')
+report_model = genai.GenerativeModel('gemini-2.0-flash')
 system_instruction = (
     "You are a medical assistant chatbot. Follow this EXACT process:"
     "\n1. Ask the patient: 'What are your main symptoms?'"
@@ -382,6 +382,7 @@ def medical_chat(request):
     session = request.session.get('chat_session', {
         'answers': [],
         'question_count': 0,
+        'asked_questions': [],  # Track all questions that have been asked
         'initial_prompt': request.POST.get('initial_prompt', '').strip() if request.method == 'POST' else ''
     })
 
@@ -391,18 +392,39 @@ def medical_chat(request):
         q_idx = session['question_count']
         if q_idx < len(fixed_questions):
             question = fixed_questions[q_idx]
-        elif q_idx < len(fixed_questions) + 2:
+        elif q_idx < len(fixed_questions) + 4:  # Up to 4 follow-up questions
             question = _generate_followup(session['answers'])
+            
+            # Check if this question is too similar to previously asked questions
+            if question in session.get('asked_questions', []):
+                # Try one more time with a stronger instruction
+                question = _generate_followup(session['answers'] + ["Please ask about something different"])
         else:
             question = "All questions answered. Please submit your answers to generate the report."
+            
+        # Track this question
+        if 'asked_questions' not in session:
+            session['asked_questions'] = []
+        if question not in session['asked_questions']:
+            session['asked_questions'].append(question)
+            
         request.session['chat_session'] = session
         return JsonResponse({'status': 'question', 'question': question})
 
     # Handle POST: user submitted an answer
     user_input = request.POST.get('user_input', '').strip()
-    # Append user answer to file history
+    
+    # Get the current question being answered
+    q_idx = session['question_count']
+    current_question = ""
+    if q_idx < len(fixed_questions):
+        current_question = fixed_questions[q_idx]
+    elif q_idx < len(fixed_questions) + 4 and 'asked_questions' in session and len(session['asked_questions']) > q_idx:
+        current_question = session['asked_questions'][q_idx]
+    
+    # Append user answer to file history with the question it answers
     with open(history_file, 'a', encoding='utf-8') as f:
-        f.write(f"Q{session['question_count'] + 1}: {user_input}\n")
+        f.write(f"Q{session['question_count'] + 1}: {current_question}\nA{session['question_count'] + 1}: {user_input}\n\n")
 
     # Update session
     session['answers'].append(user_input)
@@ -415,13 +437,26 @@ def medical_chat(request):
     if q_idx < len(fixed_questions):
         next_q = fixed_questions[q_idx]
         return JsonResponse({'status': 'question', 'question': next_q})
-    # Two dynamic follow-ups
-    elif q_idx < len(fixed_questions) + 2:
+    # Four dynamic follow-ups
+    elif q_idx < len(fixed_questions) + 4:
         next_q = _generate_followup(session['answers'])
+        
+        # Check if this question is too similar to previously asked questions
+        if next_q in session.get('asked_questions', []):
+            # Try one more time with a stronger instruction
+            next_q = _generate_followup(session['answers'] + ["Please ask about something different"])
+            
+        # Add to asked questions
+        if 'asked_questions' not in session:
+            session['asked_questions'] = []
+        if next_q not in session['asked_questions']:
+            session['asked_questions'].append(next_q)
+        request.session['chat_session'] = session
+        
         return JsonResponse({'status': 'question', 'question': next_q})
-    # All 5 questions done, generate report
+    # All 7 questions done, generate report
     else:
-        full_history = _compile_history(session['initial_prompt'], session['answers'])
+        full_history = _compile_history(session['initial_prompt'], session['answers'], session.get('asked_questions', []))
         report, diagnosis = _generate_report(full_history)
         # Write report & diagnosis to file
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -441,70 +476,85 @@ def medical_chat(request):
         request.session.pop('chat_session', None)
         return JsonResponse({'status': 'complete', 'report': report, 'diagnosis': diagnosis})
 
-
-# def _generate_followup(answers):
-#     """
-#     Use GenAI to generate a single follow-up question based on previous answers.
-#     """
-#     prompt = (
-#         "Based on these patient answers, ask exactly one relevant follow-up question:\n"
-#         + "\n".join(f"- {a}" for a in answers)
-#     )
-#     chat = client.chats.create(
-#         model="gemini-1.5-flash",
-#         config=types.GenerateContentConfig(
-#             system_instruction="You are a helpful medical assistant.",
-#         )
-#     )
-#     response = chat.send_message(types.Part(text=prompt))
-#     return response.text.strip()
-
 def _generate_followup(answers):
     """
     Use GenAI to generate a single follow-up question based on previous answers.
     """
+    # Get the fixed questions that were asked
+    questions_asked = fixed_questions[:min(len(answers), len(fixed_questions))]
+    
+    # Add any follow-up questions that were already asked (if we have more answers than fixed questions)
+    if len(answers) > len(fixed_questions):
+        # We store follow-up questions in the session, but we need to recreate them here
+        follow_up_count = len(answers) - len(fixed_questions)
+        questions_asked.extend([f"Follow-up question {i+1}" for i in range(follow_up_count)])
+    
+    # Create a formatted history of Q&A
+    qa_history = []
+    for i, (q, a) in enumerate(zip(questions_asked, answers)):
+        qa_history.append(f"Q{i+1}: {q}\nA{i+1}: {a}")
+    
+    # Create a list of topics to avoid based on what's already been discussed
+    topics_to_avoid = []
+    for q in questions_asked:
+        q_lower = q.lower()
+        if "symptom" in q_lower:
+            topics_to_avoid.append("symptoms")
+        if "medication" in q_lower or "medicine" in q_lower:
+            topics_to_avoid.append("medications")
+        if "allerg" in q_lower:
+            topics_to_avoid.append("allergies")
+        if "time" in q_lower or "how long" in q_lower or "when" in q_lower:
+            topics_to_avoid.append("timeline")
+        if "previous" in q_lower or "history" in q_lower or "past" in q_lower:
+            topics_to_avoid.append("medical history")
+    
+    avoid_txt = ", ".join(topics_to_avoid) if topics_to_avoid else "nothing specific"
+    
     prompt = (
-        "Based on these patient answers, ask exactly one relevant follow-up question:\n"
-        + "\n".join(f"- {a}" for a in answers)
+        "You are a medical assistant chatbot. "
+        "Conversation History:\n" + "\n\n".join(qa_history) + "\n\n"
+        f"Topics already covered that you should NOT ask about again: {avoid_txt}\n\n"
+        "Important Instructions:\n"
+        "1. DO NOT ask a question that is similar to any previously asked questions\n"
+        "2. DO NOT repeat questions about topics that have already been covered\n"
+        "3. Make your question specific and relevant to the patient's situation\n"
+        "4. Ask the question in the same language that the patient has been using\n"
+        "5. Focus on NEW information that hasn't been covered yet\n"
+        "6. Be direct and concise - ask only ONE question\n"
+        "Based on this patient history, ask exactly one relevant follow-up question that has NOT been asked before.\n\n"
     )
     
     response = med_chat_model.generate_content(
         prompt,
-        generation_config={"temperature": 0.7}
+        generation_config={"temperature": 0.8} 
     )
-    return response.text.strip()
-def _compile_history(initial_prompt, answers):
+    
+    # Store this question so we don't repeat it
+    new_question = response.text.strip()
+    return new_question
+
+def _compile_history(initial_prompt, answers, asked_questions=None):
     """
     Compile the initial prompt (if any) and patient answers into a single text blob.
     """
     history = []
     if initial_prompt:
         history.append(f"Old Prompt: {initial_prompt}")
-    for idx, ans in enumerate(answers, start=1):
-        q = fixed_questions[idx-1] if idx <= len(fixed_questions) else f"Follow-up {idx - len(fixed_questions)}"
-        history.append(f"{q} {ans}")
+    
+    # If we have a list of asked questions, use those
+    if asked_questions and len(asked_questions) >= len(answers):
+        for idx, (question, ans) in enumerate(zip(asked_questions, answers), start=1):
+            history.append(f"Q{idx}: {question}")
+            history.append(f"A{idx}: {ans}")
+    else:
+        # Fall back to original behavior
+        for idx, ans in enumerate(answers, start=1):
+            q = fixed_questions[idx-1] if idx <= len(fixed_questions) else f"Follow-up {idx - len(fixed_questions)}"
+            history.append(f"Q{idx}: {q}")
+            history.append(f"A{idx}: {ans}")
+    
     return "\n".join(history)
-
-
-# def _generate_report(history_text):
-#     """
-#     Send the full history to GenAI to generate the medical report and diagnosis.
-#     """
-#     system_instruction = (
-#         "You are a medical assistant. Generate a medical report with sections for History of Present Illness, Medications, and Allergies, "
-#         "then on a new line put '###1234###' and your preliminary diagnosis."
-#     )
-#     prompt = history_text
-#     chat = client.chats.create(
-#         model="gemini-1.5-flash",
-#         config=types.GenerateContentConfig(
-#             system_instruction=system_instruction
-#         )
-#     )
-#     response = chat.send_message(types.Part(text=prompt))
-#     full = response.text.strip()
-#     report, _, diag = full.partition('###1234###')
-#     return report.strip(), diag.strip()
 
 def _generate_report(history_text):
     """

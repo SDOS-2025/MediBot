@@ -292,6 +292,16 @@ $(function() {
             // The report_gen view returns bot_response directly
             if (response.status === 'success') {
                 addMessage(response.response, 'bot-message');
+                // Check for report completion keywords
+                if (
+                    response.response.includes('Diagnosis') || 
+                    response.response.includes('Preliminary Diagnosis')
+                ) {
+                    userInput.prop('disabled', true);
+                    sendButton.prop('disabled', true);
+                    micButton.prop('disabled', true);
+                    typingIndicator.hide();
+                }
             } else {
                 addMessage(`⚠️ ${response.response || 'Error processing request'}`, 'bot-message');
             }
