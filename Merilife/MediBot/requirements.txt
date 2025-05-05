@@ -14,5 +14,5 @@ requests==2.32.3
 # torch==2.6.0
 transformers==4.41.2
 google-genai==1.11.0
-google-generativeai==0.8.4
+google-generativeai==0.8.3
 google-ai-generativelanguage==0.6.15
