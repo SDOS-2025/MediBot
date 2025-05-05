@@ -29,9 +29,21 @@ def index(request):
     # Add a link to admin if user is not logged in or not staff/superuser
     show_admin_link = not request.user.is_authenticated or \
                       (request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser)
+    
     context = {
         'show_admin_link': show_admin_link
     }
+    
+    # Check if the user is authenticated and has a doctor profile
+    if request.user.is_authenticated:
+        try:
+            # This will raise DoctorProfile.DoesNotExist if the profile doesn't exist
+            doctor_profile = request.user.doctor_profile
+            context['is_doctor'] = True
+        except Exception:
+            # User doesn't have a doctor profile
+            context['is_doctor'] = False
+    
     return render(request, 'chatbot/index.html', context)
 
 def register_user(request):
@@ -153,7 +165,14 @@ def doctor_dashboard(request):
         reqd=doctor_specialization  # Critical filter
     )
     # Ensure only doctors can access this view
-    if not hasattr(request.user, 'doctor_profile'):
+    is_doctor = False
+    try:
+        if hasattr(request.user, 'doctor_profile') and request.user.doctor_profile is not None:
+            is_doctor = True
+    except Exception:
+        pass
+    
+    if not is_doctor and not (request.user.is_staff and not request.user.is_superuser):
         messages.error(request, 'Access denied')
         return redirect('login')
 

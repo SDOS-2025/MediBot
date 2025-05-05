@@ -11,6 +11,23 @@
 </h1>
 {% endblock %}
 
+{% block nav-global %}
+<div id="load-manager-nav" style="float: left; margin-left: 20px; line-height: 40px;">
+    <a href="{% url 'load_dashboard' %}" style="padding: 5px 15px; background-color: #71b7e6; color: white; border-radius: 4px; text-decoration: none; font-weight: bold;">
+        Load Manager
+    </a>
+</div>
+{% endblock %}
+
+{% block usertools %}
+<div id="user-tools">
+    {% if has_permission %}
+        <a href="{% url 'load_dashboard' %}" style="margin-right: 15px; color: #9b59b6; text-decoration: none; font-weight: bold;">Load Manager</a>
+    {% endif %}
+    {{ block.super }}
+</div>
+{% endblock %}
+
 {% block extrahead %}
 <style>
     :root {
@@ -70,6 +87,10 @@
     
     .submit-row input.default:hover {
         background: #7d3c98;
+    }
+    
+    #load-manager-nav a:hover {
+        background-color: #5a91b8;
     }
 </style>
 {% endblock %}
