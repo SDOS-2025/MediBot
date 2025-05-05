@@ -72,6 +72,21 @@
     .nav-link:hover::after {
       width: 80%; left: 10%;
     }
+    
+    /* Button styles */
+    .btn-dashboard {
+      background-color: var(--primary);
+      color: white !important;
+      padding: 0.5rem 1.25rem !important;
+      font-weight: bold;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(155,89,182,0.3);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .btn-dashboard:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(155,89,182,0.5);
+    }
 
     /* ─────────── Main ─────────── */
     main {
@@ -148,8 +163,8 @@
             <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
             <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
             {% if user.is_authenticated %}
-              {% if user.is_staff and not user.is_superuser %}
-                <li class="nav-item"><a class="nav-link btn btn-sm btn-outline-primary" href="{% url 'doctor_dashboard' %}">Doctor</a></li>
+              {% if is_doctor or user.is_staff and not user.is_superuser %}
+                <li class="nav-item"><a class="nav-link btn-dashboard" href="{% url 'doctor_dashboard' %}"><i class="fas fa-clinic-medical mr-1"></i>Dashboard</a></li>
               {% elif user.is_superuser %}
                 <li class="nav-item"><a class="nav-link btn btn-sm btn-outline-primary" href="{% url 'admin:index' %}">Admin</a></li>
               {% else %}
