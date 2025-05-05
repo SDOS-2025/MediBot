@@ -1,45 +1,34 @@
 name: Django + Pytest CI
 
 on:
-  push:    { branches: ['**'] }
-  pull_request: { branches: ['**'] }
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
 
 jobs:
   test:
     runs-on: windows-latest
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: medibot_test
-        ports:
-          - 5432:5432
-
-    env:
-      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/medibot_test
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python 3.11
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
       - name: Install dependencies
         run: |
-          cd Merilife/MediBot
           pip install --upgrade pip
           pip install -r requirements.txt
+        working-directory: Merilife/MediBot
 
       - name: Run migrations
-        run: |
-          cd Merilife/MediBot
-          python manage.py migrate --noinput
+        run: python manage.py migrate --noinput
+        working-directory: Merilife/MediBot
 
       - name: Run tests
-        run: |
-          cd Merilife/MediBot
-          pytest --maxfail=1 --disable-warnings -q
+        run: pytest --maxfail=1 --disable-warnings -q
+        working-directory: Merilife/MediBot
