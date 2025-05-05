@@ -1,0 +1,178 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{% load load_tags %}
+
+{% block title %}Load Manager Dashboard{% endblock %}
+
+{% block extrastyle %}
+<style>
+    .load-dashboard {
+        padding: 20px;
+    }
+    .load-card {
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+    }
+    .load-metric {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .progress-bar {
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        height: 20px;
+        margin-top: 10px;
+        overflow: hidden;
+        width: 100%;
+    }
+    .progress-fill {
+        background-color: #79aec8;
+        height: 100%;
+        transition: width 0.5s ease-in-out;
+    }
+    .progress-fill.warning {
+        background-color: #ffb347;
+    }
+    .progress-fill.danger {
+        background-color: #ff6b6b;
+    }
+    .server-card {
+        display: inline-block;
+        width: 30%;
+        margin-right: 3%;
+        margin-bottom: 20px;
+        vertical-align: top;
+    }
+    .refresh-btn {
+        background-color: #79aec8;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 8px 16px;
+        margin-bottom: 20px;
+    }
+    .refresh-btn:hover {
+        background-color: #417690;
+    }
+    #update-time {
+        font-size: 12px;
+        color: #666;
+        margin-left: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="load-dashboard">
+    <h1>Load Manager Dashboard</h1>
+    
+    <button id="refreshBtn" class="refresh-btn">Refresh Data</button>
+    <span id="update-time">Last updated: {% now "F j, Y, H:i:s" %}</span>
+    
+    <div class="load-card">
+        <h2>System Overview</h2>
+        <div class="load-metric">
+            <span>Active Connections:</span>
+            <span id="active-connections">{{ active_connections }}</span>
+        </div>
+        <div class="load-metric">
+            <span>Max Connections:</span>
+            <span id="max-connections">{{ max_connections }}</span>
+        </div>
+        <div class="load-metric">
+            <span>System Load:</span>
+            <span id="system-load">{{ system_load|floatformat:1 }}%</span>
+        </div>
+        <div class="load-metric">
+            <span>Status:</span>
+            <span id="system-status" style="color: {% if is_overloaded %}red{% else %}green{% endif %}">
+                {% if is_overloaded %}Overloaded{% else %}Normal{% endif %}
+            </span>
+        </div>
+        
+        <div class="progress-bar">
+            <div id="load-progress" class="progress-fill {% if system_load > 80 %}danger{% elif system_load > 60 %}warning{% endif %}" 
+                 style="width: {{ system_load }}%"></div>
+        </div>
+    </div>
+    
+    <h2>Server Instances</h2>
+    <div id="server-container">
+        {% for server in server_instances %}
+        <div class="load-card server-card">
+            <h3>{{ server }}</h3>
+            <div class="load-metric">
+                <span>Connections:</span>
+                <span id="server-{{ server }}-load">{{ instance_load|get_item:server }}</span>
+            </div>
+            <div class="progress-bar">
+                <div id="server-{{ server }}-progress" class="progress-fill" 
+                     style="width: {% widthratio instance_load|get_item:server max_connections 100 %}%"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const refreshBtn = document.getElementById('refreshBtn');
+        
+        refreshBtn.addEventListener('click', function() {
+            fetchLoadData();
+        });
+        
+        // Auto refresh every 30 seconds
+        setInterval(fetchLoadData, 30000);
+        
+        function fetchLoadData() {
+            fetch('/api/load-status/')
+                .then(response => response.json())
+                .then(data => {
+                    updateDashboard(data);
+                    document.getElementById('update-time').textContent = 'Last updated: ' + new Date().toLocaleString();
+                })
+                .catch(error => console.error('Error fetching load data:', error));
+        }
+        
+        function updateDashboard(data) {
+            // Update system metrics
+            document.getElementById('active-connections').textContent = data.active_connections;
+            document.getElementById('max-connections').textContent = data.max_connections;
+            document.getElementById('system-load').textContent = data.system_load_percent.toFixed(1) + '%';
+            
+            const systemStatus = document.getElementById('system-status');
+            systemStatus.textContent = data.is_overloaded ? 'Overloaded' : 'Normal';
+            systemStatus.style.color = data.is_overloaded ? 'red' : 'green';
+            
+            const loadProgress = document.getElementById('load-progress');
+            loadProgress.style.width = data.system_load_percent + '%';
+            loadProgress.className = 'progress-fill';
+            if (data.system_load_percent > 80) {
+                loadProgress.classList.add('danger');
+            } else if (data.system_load_percent > 60) {
+                loadProgress.classList.add('warning');
+            }
+            
+            // Update server instances
+            for (const server in data.server_status) {
+                const load = data.server_status[server];
+                const loadElement = document.getElementById(`server-${server}-load`);
+                const progressElement = document.getElementById(`server-${server}-progress`);
+                
+                if (loadElement && progressElement) {
+                    loadElement.textContent = load;
+                    const percentage = (load / data.max_connections) * 100;
+                    progressElement.style.width = percentage + '%';
+                }
+            }
+        }
+    });
+</script>
+{% endblock %} 

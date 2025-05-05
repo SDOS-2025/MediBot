@@ -5,6 +5,7 @@ This module handles both Meditron model integration and Google GenAI integration
 import os
 import logging
 import random
+from chatbot.load_utils import check_system_load, release_server_connection
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -64,18 +65,29 @@ def send_chat_message(user_input):
     Args:
         user_input (str): User's message
     Returns:
-        str: AI response
+        str: AI response or error message if system is overloaded
     """
-    # First try GenAI if available
-    if GENAI_AVAILABLE and GENAI_CLIENT_WORKING:
-        try:
-            return _send_genai_message(user_input)
-        except Exception as e:
-            logger.error(f"GenAI error: {e}")
-            # Fall through to next option
+    # Check system load first
+    can_proceed, message, server = check_system_load()
+    if not can_proceed:
+        logger.warning("Request rejected due to high system load")
+        return message
     
-    # If GenAI failed or isn't available, use rule-based responses
-    return _generate_fallback_response(user_input)
+    try:
+        # First try GenAI if available
+        if GENAI_AVAILABLE and GENAI_CLIENT_WORKING:
+            try:
+                response = _send_genai_message(user_input)
+                return response
+            except Exception as e:
+                logger.error(f"GenAI error: {e}")
+                # Fall through to next option
+        
+        # If GenAI failed or isn't available, use rule-based responses
+        return _generate_fallback_response(user_input)
+    finally:
+        # Always release the connection when done
+        release_server_connection(server)
 
 def generate_medical_report(prompt):
     """
@@ -86,33 +98,43 @@ def generate_medical_report(prompt):
         prompt (str): The patient information and history
         
     Returns:
-        str: Generated medical report
+        str: Generated medical report or error message if system is overloaded
     """
-    if GENAI_AVAILABLE and GENAI_CLIENT_WORKING:
-        try:
-            system_prompt = (
-                "You are a medical assistant. Generate a comprehensive medical report "
-                "based on the patient information provided. Include sections for "
-                "History of Present Illness, Assessment, and Plan."
-            )
-            
-            # Try to create a chat with system instructions
-            try:
-                chat = client.chats.create(
-                    model="gemini-1.5-flash",
-                    config=types.GenerateContentConfig(system_instruction=system_prompt)
-                )
-                response = chat.send_message(prompt)
-                return response.text
-            except:
-                # If chat with system instructions fails, try direct generation
-                response = client.generate_content(prompt)
-                return response.text
-        except Exception as e:
-            logger.error(f"Error generating medical report with GenAI: {e}")
+    # Check system load first
+    can_proceed, message, server = check_system_load()
+    if not can_proceed:
+        logger.warning("Report generation rejected due to high system load")
+        return message
     
-    # Fallback to basic report generation
-    return _generate_fallback_report(prompt)
+    try:
+        if GENAI_AVAILABLE and GENAI_CLIENT_WORKING:
+            try:
+                system_prompt = (
+                    "You are a medical assistant. Generate a comprehensive medical report "
+                    "based on the patient information provided. Include sections for "
+                    "History of Present Illness, Assessment, and Plan."
+                )
+                
+                # Try to create a chat with system instructions
+                try:
+                    chat = client.chats.create(
+                        model="gemini-1.5-flash",
+                        config=types.GenerateContentConfig(system_instruction=system_prompt)
+                    )
+                    response = chat.send_message(prompt)
+                    return response.text
+                except:
+                    # If chat with system instructions fails, try direct generation
+                    response = client.generate_content(prompt)
+                    return response.text
+            except Exception as e:
+                logger.error(f"Error generating medical report with GenAI: {e}")
+        
+        # Fallback to basic report generation
+        return _generate_fallback_report(prompt)
+    finally:
+        # Always release the connection when done
+        release_server_connection(server)
 
 def _send_genai_message(user_input):
     """Sends message using Google GenAI"""
