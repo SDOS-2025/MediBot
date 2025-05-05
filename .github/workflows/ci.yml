@@ -1,0 +1,45 @@
+name: Django + Pytest CI
+
+on:
+  push:    { branches: ['**'] }
+  pull_request: { branches: ['**'] }
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: medibot_test
+        ports:
+          - 5432:5432
+
+    env:
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/medibot_test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          cd Merilife/MediBot
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run migrations
+        run: |
+          cd Merilife/MediBot
+          python manage.py migrate --noinput
+
+      - name: Run tests
+        run: |
+          cd Merilife/MediBot
+          pytest --maxfail=1 --disable-warnings -q
