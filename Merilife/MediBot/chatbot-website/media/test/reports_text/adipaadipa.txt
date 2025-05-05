@@ -25,3 +25,9 @@ Diagnosis: **Preliminary Diagnosis:**  Upper Respiratory Infection (URI)
 Q1: आपके मुख्य लक्षण क्या हैं?
 A1: मुझे बुखार है
 
+Q1: आपके मुख्य लक्षण क्या हैं?
+A1: मुझे
+
+Q2: आपको ये लक्षण कितने समय से हैं?
+A2: 3 दिन से
+
