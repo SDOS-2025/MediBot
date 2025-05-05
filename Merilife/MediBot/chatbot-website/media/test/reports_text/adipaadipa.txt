@@ -1,20 +1,20 @@
-Q1: cold and fever
-Q2: 3 days
-Q3: no
-Q4: no
-Q5: no
-=== 2025-05-04 16:05:30 ===
-Report:
-**Medical Report**
+Q1: What are your main symptoms?
+A1: fever
 
-**1. History of Present Illness:**
+Q2: How long have you been experiencing these symptoms?
+A2: 524 10 days
 
-The patient presents with a three-day history of cold symptoms and fever.  The onset was three days prior to this visit.  No other specific symptoms were elaborated upon.
+Q3: Do you have any previous medical conditions?
+A3: no
 
-**2. Medications:**
+Q1: आपके मुख्य लक्षण क्या हैं?
+A1: fever hai
 
-None reported.
+Q2: आपको ये लक्षण कितने समय से हैं?
+A2: 5 से 10 दिनों से
 
+<<<<<<< HEAD
+=======
 **3. Allergies:**
 
 None reported.
@@ -24,7 +24,4 @@ Diagnosis: **Preliminary Diagnosis:**  Upper Respiratory Infection (URI)
 **Note:** This is a preliminary diagnosis based on limited information. Further investigation, including a physical examination and potentially laboratory testing, may be necessary to confirm the diagnosis and rule out other potential causes.
 Q1: आपके मुख्य लक्षण क्या हैं?
 A1: मुझे बुखार है
-
-Q1: Quels sont vos principaux symptômes?
-A1: Oui-Oui
 

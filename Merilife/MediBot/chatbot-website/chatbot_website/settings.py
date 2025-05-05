@@ -13,7 +13,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'medico_db',  # Change this to your actual database name
         'USER': 'root',  # MySQL username (usually 'root' for local development)this
-        'PASSWORD': 'Aditya@1998',
+        'PASSWORD': '45221313',
         'HOST': 'localhost',
         'PORT': '3306',
     }
