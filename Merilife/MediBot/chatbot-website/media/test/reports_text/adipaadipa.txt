@@ -1,28 +1,12 @@
-Q1: What are your main symptoms?
+Q1: మీ ప్రధాన లక్షణాలు ఏమిటి?
 A1: fever
 
-Q2: How long have you been experiencing these symptoms?
-A2: 524 10 days
+Q2: ఈ లక్షణాలు ఎంతకాలంగా ఉన్నాయి?
+A2: 2 days
 
-Q3: Do you have any previous medical conditions?
-A3: no
+Q3: మీకు ఎలాంటి గత వైద్య పరిస్థితులు ఉన్నాయా?
+A3: nope
 
-Q1: आपके मुख्य लक्षण क्या हैं?
-A1: fever hai
+Q4: What are your main symptoms?
+A4: 2 days
 
-Q2: आपको ये लक्षण कितने समय से हैं?
-A2: 5 से 10 दिनों से
-
-<<<<<<< HEAD
-=======
-**3. Allergies:**
-
-None reported.
-Diagnosis: **Preliminary Diagnosis:**  Upper Respiratory Infection (URI)
-
-
-**Note:** This is a preliminary diagnosis based on limited information. Further investigation, including a physical examination and potentially laboratory testing, may be necessary to confirm the diagnosis and rule out other potential causes.
-Q1: आपके मुख्य लक्षण क्या हैं?
-A1: मुझे बुखार है
-
->>>>>>> f1199022ec5c89823b1765b0be80378d7d358233

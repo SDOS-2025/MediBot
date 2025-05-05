@@ -25,3 +25,13 @@ class AITests(TestCase):
         with patch('chatbot.ai_wrapper.GENAI_CLIENT_WORKING', False):
             report = generate_medical_report('Patient has fever')
             self.assertIn('MEDICAL REPORT', report)
+
+    def test_google_genai_api_message(self):
+        try:
+            import google.generativeai as genai
+            genai.configure(api_key="AIzaSyB0R26JpwnrxR1iHP7SRdlXImYhG2NAYLQ")
+            model = genai.GenerativeModel('gemini-2.0-flash')
+            response = model.generate_content("Hello, are you working?")
+            assert hasattr(response, 'text') and response.text
+        except Exception as e:
+            assert False, f"Google GenAI API call failed: {e}"

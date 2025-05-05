@@ -402,13 +402,6 @@ report_model = genai.GenerativeModel('gemini-2.0-flash')
 #     "First old prompt is giiven to u if user has that will be used to generate the report. in complete info explasin that too like earlier issues and then add full info of the user and then ask the question. "
 # )
 
-fixed_questions = [
-    "What are your main symptoms?",
-    "How long have you been experiencing these symptoms?",
-    "Do you have any previous medical conditions?"
-]# Decorator to exempt CSRF for simplicity
-
-
 TRANSLATED_QUESTIONS = {
     'en-US': [
         "What are your main symptoms?",
@@ -419,6 +412,46 @@ TRANSLATED_QUESTIONS = {
         "आपके मुख्य लक्षण क्या हैं?",
         "आपको ये लक्षण कितने समय से हैं?",
         "क्या आपको कोई पूर्व चिकित्सीय स्थितियां हैं?"
+    ],
+    'bn-IN': [
+        "আপনার প্রধান উপসর্গ কী?",
+        "আপনি কতদিন ধরে এই উপসর্গগুলি অনুভব করছেন?",
+        "আপনার কি কোনো পূর্ববর্তী চিকিৎসা অবস্থা আছে?"
+    ],
+    'mr-IN': [
+        "आपली मुख्य लक्षणे कोणती आहेत?",
+        "आपण ही लक्षणे किती दिवसांपासून अनुभवत आहात?",
+        "आपल्याला कोणतीही पूर्व वैद्यकीय स्थिती आहे का?"
+    ],
+    'ta-IN': [
+        "உங்கள் முக்கிய அறிகுறிகள் என்ன?",
+        "இந்த அறிகுறிகள் எவ்வளவு நாட்களாக உள்ளன?",
+        "உங்களுக்கு ஏதேனும் முன் மருத்துவ நிலைகள் உள்ளனவா?"
+    ],
+    'te-IN': [
+        "మీ ప్రధాన లక్షణాలు ఏమిటి?",
+        "ఈ లక్షణాలు ఎంతకాలంగా ఉన్నాయి?",
+        "మీకు ఎలాంటి గత వైద్య పరిస్థితులు ఉన్నాయా?"
+    ],
+    'gu-IN': [
+        "તમારા મુખ્ય લક્ષણો શું છે?",
+        "આ લક્ષણો કેટલા સમયથી છે?",
+        "શું તમને કોઈ અગાઉની તબીબી સ્થિતિ છે?"
+    ],
+    'kn-IN': [
+        "ನಿಮ್ಮ ಮುಖ್ಯ ಲಕ್ಷಣಗಳು ಯಾವುವು?",
+        "ಈ ಲಕ್ಷಣಗಳು ಎಷ್ಟು ದಿನಗಳಿಂದ ಇವೆ?",
+        "ನಿಮಗೆ ಯಾವುದೇ ಹಿಂದಿನ ವೈದ್ಯಕೀಯ ಸ್ಥಿತಿಗಳು ಇದೆಯೆ?"
+    ],
+    'ml-IN': [
+        "നിങ്ങളുടെ പ്രധാന ലക്ഷണങ്ങൾ എന്താണ്?",
+        "ഈ ലക്ഷണങ്ങൾ എത്ര ദിവസമായി ഉണ്ട്?",
+        "നിങ്ങൾക്ക് മുൻപ് ഏതെങ്കിലും മെഡിക്കൽ അവസ്ഥയുണ്ടോ?"
+    ],
+    'pa-IN': [
+        "ਤੁਹਾਡੇ ਮੁੱਖ ਲੱਛਣ ਕੀ ਹਨ?",
+        "ਤੁਸੀਂ ਇਹ ਲੱਛਣ ਕਿੰਨੇ ਸਮੇਂ ਤੋਂ ਮਹਿਸੂਸ ਕਰ ਰਹੇ ਹੋ?",
+        "ਕੀ ਤੁਹਾਨੂੰ ਕੋਈ ਪਿਛਲੀ ਮੈਡੀਕਲ ਹਾਲਤ ਹੈ?"
     ],
     'es-ES': [
         "¿Cuáles son sus síntomas principales?",
@@ -435,9 +468,19 @@ TRANSLATED_QUESTIONS = {
 LANGUAGE_MAP = {
     'en-US': 'English',
     'hi-IN': 'Hindi',
+    'bn-IN': 'Bengali',
+    'mr-IN': 'Marathi',
+    'ta-IN': 'Tamil',
+    'te-IN': 'Telugu',
+    'gu-IN': 'Gujarati',
+    'kn-IN': 'Kannada',
+    'ml-IN': 'Malayalam',
+    'pa-IN': 'Punjabi',
     'es-ES': 'Spanish',
     'fr-FR': 'French'
 }
+
+fixed_questions = TRANSLATED_QUESTIONS['en-US']  # Default to English
 
 @csrf_exempt
 def medical_chat(request):
