@@ -92,7 +92,7 @@ def user_login(request):
         if user is not None:
             login(request, user)
             if user.is_superuser:
-                return redirect('admin:index')
+                return redirect('index')  # send admins to site homepage where Register Doctor appears
             # doctors are users with a linked DoctorProfile
             if hasattr(user, 'doctor_profile'):
                 return redirect('doctor_dashboard')
@@ -668,23 +668,33 @@ def _generate_followup(answers, request):
         'es-ES': ["ya preguntado", "repetir", "mismo"],
         'fr-FR': ["déjà demandé", "répéter", "même"]
     }.get(selected_lang, [])
-    
+
+    # Recent context for narrowing the next step
+    recent_answers = answers[-2:]
+    avoid_list = ", ".join(avoid_words + asked_questions[-2:])
+
+    # Prompt with SOAP structure
     prompt = (
-        f"Generate unique follow-up question in {lang_name} based on:\n"
-        "Conversation History:\n" + "\n".join([f"Q{i+1}: {q}\nA{i+1}: {a}" 
-                                             for i, (q, a) in enumerate(previous_qa)]) + "\n\n"
-        "Rules:\n"
+        f"Generate a unique and clinically relevant follow-up question in {lang_name}.\n\n"
+        "Conversation History:\n" +
+        "\n".join([f"Q{i+1}: {q}\nA{i+1}: {a}" for i, (q, a) in enumerate(previous_qa)]) + "\n\n"
+        "Guidelines:\n"
         "1. Ask ONE new question in {lang_name}\n"
-        "2. Avoid repeating: {avoid_list}\n"
-        "3. Progress diagnosis logically\n"
-        "4. Consider: {recent_answers}\n\n"
+        "2. Avoid repeating topics or phrases like: {avoid_list}\n"
+        "3. Use SOAP framework:\n"
+        "   - S (Subjective): Consider symptoms or patient descriptions\n"
+        "   - O (Objective): Consider measurable facts or observed signs\n"
+        "   - A (Assessment): Try to narrow down the diagnostic thinking\n"
+        "   - P (Plan): Lead towards management or next step in evaluation\n"
+        "4. Progress diagnosis logically based on recent answers: {recent_context}\n\n"
         "Suggested question:".format(
             lang_name=lang_name,
-            avoid_list=", ".join(avoid_words + session.get('asked_questions', [])[-2:]),
-            recent_answers=", ".join(answers[-2:])
+            avoid_list=avoid_list,
+            recent_context=", ".join(recent_answers)
         )
     )
-    
+
+
     # Generate with higher temperature for variety
     response = med_chat_model.generate_content(
         prompt,
@@ -698,6 +708,7 @@ def _generate_followup(answers, request):
     request.session['chat_session'] = session
     
     return question
+
 
 def _extract_topics(question, lang):
     topic_map = {
@@ -836,3 +847,7 @@ def speech_to_text(request):
     except Exception as e:
         logger.error(f"Unexpected error in speech_to_text view: {e}", exc_info=True)
         return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
+
+def about(request):
+    """Render the About Me page"""
+    return render(request, 'chatbot/about.html')

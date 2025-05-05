@@ -1,5 +1,5 @@
 from django.urls import path
-from .views.views import index, user_login, register_user, chat, doctor_dashboard, register_doctor, user_logout, generate_pdf, pdf_preview, close_treatment, view_treatment_history
+from .views.views import index, user_login, register_user, chat, doctor_dashboard, register_doctor, user_logout, generate_pdf, pdf_preview, close_treatment, view_treatment_history, about
 from django.conf.urls.static import static
 from django.conf import settings
 from .views.views import reportgen, medical_chat
@@ -9,6 +9,7 @@ from .views import views as chatbot_views
 urlpatterns = [
     # path('admin/register_doctor/', register_doctor, name='register_doctor'),  # Admin-only doctor registration
     path('', index, name='index'),
+    path('about/', about, name='about'),  # About page link
     path('login/', user_login, name='login'),
     path('logout/', user_logout, name='logout'),
     path('register/', register_user, name='register'),
