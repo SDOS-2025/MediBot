@@ -22,3 +22,6 @@ Diagnosis: **Preliminary Diagnosis:**  Upper Respiratory Infection (URI)
 
 
 **Note:** This is a preliminary diagnosis based on limited information. Further investigation, including a physical examination and potentially laboratory testing, may be necessary to confirm the diagnosis and rule out other potential causes.
+Q1: आपके मुख्य लक्षण क्या हैं?
+A1: मुझे बुखार है
+
