@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About Me - Medico</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; color: #333; margin: 0; padding: 0; }
+    .about-container { max-width: 800px; margin: 4rem auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; }
+    .about-container img { width: 200px; height: auto; border-radius: 50%; margin-bottom: 1.5rem; }
+    .about-container h2 { margin-bottom: 1rem; color: #9b59b6; }
+    .about-container p { text-align: left; line-height: 1.6; margin-bottom: 1rem; }
+    .nav-link { color: #9b59b6; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}"><i class="fas fa-heartbeat"></i> Medico</a>
+      <ul class="nav">
+        <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{% url 'about' %}">About</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="about-container">
+    <h2>About Me</h2>
+    <img src="{% static 'images/aditya.png' %}" alt="Aditya Upadhyay">
+    <p>My name is Aditya Upadhyay, a passionate and dedicated student currently pursuing my degree from IIIT Delhi. I have a strong foundation in computer science and an avid interest in software development, algorithms, and data structures. My coding skills span across languages like C, C++, Python, and I am comfortable working with tools like Git, NumPy, pandas, and Matplotlib.</p>
+    <p>I have successfully contributed to various academic and personal projects involving image processing, data analysis, and machine learning. I actively participate in hackathons, coding competitions, and have consistently ranked among top performers in programming contests. My accomplishments include completing internships, volunteering for NGOs, and making meaningful contributions to open-source projects.</p>
+    <p>I strive to continuously learn and grow, seeking opportunities where I can apply my skills to solve real-world problems.</p>
+  </div>
+</body>
+</html>
