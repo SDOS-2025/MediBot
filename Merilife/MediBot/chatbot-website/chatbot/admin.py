@@ -5,7 +5,16 @@ from django.urls import path, reverse
 from chatbot.models import CustomUser, DoctorProfile, PatientProfile
 from django.http import HttpResponseRedirect
 
+# Add inline for DoctorProfile
+class DoctorProfileInline(admin.StackedInline):
+    model = DoctorProfile
+    can_delete = False
+    verbose_name_plural = 'Doctor Profile'
+
 class CustomUserAdmin(UserAdmin):
+    # Include DoctorProfile inline
+    inlines = [DoctorProfileInline]
+
     fieldsets = (
         (None, {'fields': ('uid', 'password')}),
         ('Personal Information', {'fields': ('full_name', 'email', 'phone')}),
@@ -22,10 +31,17 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('uid', 'password1', 'password2', 'full_name', 'is_staff'),
         }),
     )
-    list_display = ('uid', 'full_name', 'is_staff', 'specialization', 'date_joined')
-    list_filter = ('is_staff', 'is_active', 'specialization')
-    search_fields = ('uid', 'full_name', 'email', 'specialization')
+    list_display = ('uid', 'full_name', 'is_staff', 'get_specialization', 'date_joined')
+    list_filter = ('is_staff', 'is_active', 'doctor_profile__specialization')
+    search_fields = ('uid', 'full_name', 'email', 'doctor_profile__specialization')
     ordering = ('uid',)
+
+    def get_specialization(self, obj):
+        # Display the specialization from the related DoctorProfile
+        if hasattr(obj, 'doctor_profile') and obj.doctor_profile:
+            return obj.doctor_profile.specialization
+        return ''
+    get_specialization.short_description = 'Specialization'
 
 class CustomAdminSite(admin.AdminSite):
     site_header = 'Medico Administration'
