@@ -27,8 +27,8 @@ jobs:
 
       - name: Run migrations
         run: python manage.py migrate --noinput
-        working-directory: Merilife/MediBot
+        working-directory: Merilife/MediBot/chatbot-website
 
       - name: Run tests
         run: pytest --maxfail=1 --disable-warnings -q
-        working-directory: Merilife/MediBot
+        working-directory: Merilife/MediBot/chatbot-website
